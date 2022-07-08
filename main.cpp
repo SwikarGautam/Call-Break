@@ -1,60 +1,79 @@
+// #include "Menu.hpp"
 #include <SFML/Graphics.hpp>
-// #include <SFML/Window.hpp>
 #include <iostream>
 
-// class Player{
-// private:
-// int x;
-// public:
-    
-
-// };
-
-
-int main()
+int main(void)
 {
-    
-    sf::RenderWindow window(sf::VideoMode(1600,1080),"My window");
+	//	Create window
+	sf::RenderWindow window;
+	window.create(sf::VideoMode(800, 600), "Call Break");
 
-    sf::RectangleShape rect;
-    sf::Vector2f rectPosition(600,350);
+	//	Menu stuff
+	// Menu menu(window.getSize().x, window.getSize().y);
+	sf::Texture texture;
+	if (!texture.loadFromFile("src/Images/card_background_menu.jpg"))
+	{
+		std::cout << "Error loading menu background image.";
+	}
+	sf::Sprite menuBackground(texture);
 
-    rect.setPosition(rectPosition);
-    rect.setSize(sf::Vector2f(100,100));
+	//	Game loop
+	while (window.isOpen())
+	{
+		sf::Event event;
+		while (window.pollEvent(event))
+		{
+				if (event.type == sf::Event::Closed)
+				{
+					window.close();
+				}
+			// if (event.type == sf::Event::KeyPressed)
+			// {
+			// 	//	Up arrow key pressed
+			// 	if (event.key.code == sf::Keyboard::Up)
+			// 	{
+			// 		//	Shift selected label to down
+			// 		menu.moveUp();
+			// 	}
+			// 	//	Down arrow key pressed
+			// 	if (event.key.code == sf::Keyboard::Down)
+			// 	{
+			// 		//	Shift selected label to down
+			// 		menu.moveDown();
+			// 	}
 
-    sf::Texture texture;
-    texture.loadFromFile("src/images/cards/cardFront/all_cards.png");
-    texture.setSmooth(true);
-    sf::Sprite sprite;
-    sprite.setTexture(texture);
-    int x = 140;
-    int y = 190;
-    sprite.setTextureRect(sf::IntRect(x,y,140,190));
-    window.setFramerateLimit(20);
-    while(window.isOpen()){
-        sf::Event event;
-        while (window.pollEvent(event)){
+				//	Enter key pressed
 
-            if (event.type == sf::Event::Closed){
-                window.close();
-            }
-        
-            if(event.type == sf::Event::MouseButtonPressed){
-                rectPosition.x = event.mouseButton.x;
-                rectPosition.y = event.mouseButton.y;
-            }
+				// if (event.key.code == sf::Keyboard::Return)
+				// {
+				// 	switch (menu.getPressedLabel()){
+				// 		case 0:
+				// 			std::cout << "Play pressed";
+				// 			break;
+				// 		case 1:
+				// 			std::cout << "Options pressed";
+				// 			break;
+				// 		case 2:
+				// 			window.close();
+				// 			break;
+				// 		default:
+				// 			std::cout << "Not valid";
+				// 			break;
+				// 	}
+				// }
 
-        // rect.setPosition(rectPosition);
-        
-        sprite.setScale(4.f,2.f);
-        sprite.setRotation(45.f);
-        sprite.setPosition(rectPosition);
-        window.clear(sf::Color(0,200,75));
-        // window.draw(rect);
-        window.draw(sprite);
-        window.display();
+		// }
+		}
+		//	Clear the screen with black color
+		window.clear(sf::Color::Black);
 
-        }
-    }
-    return 0;
+		// window.draw(menuBackground);
+		//	Draw menu
+		// menu.draw(window);
+
+		//	end of current frame
+		window.display();
+
+	}
+	return 0;
 }

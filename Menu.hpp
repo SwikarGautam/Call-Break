@@ -1,3 +1,6 @@
+//	Menu.hpp
+//	Header file for Menu.cpp
+
 #pragma once
 
 #include <SFML/Graphics.hpp>

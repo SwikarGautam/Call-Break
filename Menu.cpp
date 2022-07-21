@@ -21,7 +21,7 @@ Menu::Menu(float width, float height)
 	//	Label : OPTIONS
 	menu[1].setFont(font);
 	menu[1].setFillColor(sf::Color::White);
-	menu[1].setString("OPTIONS");
+	menu[1].setString("CREDITS");
 	//	Specify postion for label dynamically
 	menu[1].setPosition(sf::Vector2f(labelWidth , height / (MAX_NUMBER_OF_LABELS + 1) * 2));
 

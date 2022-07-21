@@ -7,8 +7,11 @@ int main()
 	//	Create window
 	sf::RenderWindow window;
 	window.create(sf::VideoMode(800, 600), "Call Break");
+
 	//	Menu stuff
 	Menu menu(window.getSize().x, window.getSize().y);
+	
+	//	Loaded texture 
 	sf::Texture texture;
 	if (!texture.loadFromFile("src/Images/card_background_menu.jpg"))
 	{
@@ -47,12 +50,15 @@ int main()
 				{
 					switch (menu.getPressedLabel()){
 						case 0:
+							//	Main Game loop here
 							std::cout << "Play pressed";
 							break;
 						case 1:
-							std::cout << "Options pressed";
+							//	Show credits
+							std::cout << "Credits pressed";
 							break;
 						case 2:
+							//	Exit from game
 							window.close();
 							break;
 						default:

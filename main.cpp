@@ -96,11 +96,11 @@ int main()
 							//	end of current frame
 							CREDITS_WINDOW.display();
 						}
-
-						if (menu.getPressedLabel() == 2)
-						{
-							MENU_WINDOW.close();
-						}
+					}
+					if (menu.getPressedLabel() == 2)
+					{
+						MENU_WINDOW.close();
+						// std::cout << "Quit pressed"<<std::endl;
 					}
 				}
 			}

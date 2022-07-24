@@ -16,7 +16,7 @@ Menu::Menu(float width, float height)
 	}
 	//	Label : PLAY
 	menu[0].setFont(font);
-	menu[0].setFillColor(sf::Color::Black);
+	menu[0].setFillColor(sf::Color::Red);
 	menu[0].setString("PLAY");
 	//	Specify postion for label dynamically
 	menu[0].setPosition(sf::Vector2f(labelWidth, height / (MAX_NUMBER_OF_LABELS + 1) * 1));
@@ -54,7 +54,7 @@ void Menu::moveUp(){
 	{
 		menu[selectedLabelIndex].setFillColor(sf::Color::White);
 		selectedLabelIndex--;
-		menu[selectedLabelIndex].setFillColor(sf::Color::Black);
+		menu[selectedLabelIndex].setFillColor(sf::Color::Red);
 
 	}
 }
@@ -64,7 +64,7 @@ void Menu::moveDown(){
 	{
 		menu[selectedLabelIndex].setFillColor(sf::Color::White);
 		selectedLabelIndex++;
-		menu[selectedLabelIndex].setFillColor(sf::Color::Black);
+		menu[selectedLabelIndex].setFillColor(sf::Color::Red);
 
 	}
 }

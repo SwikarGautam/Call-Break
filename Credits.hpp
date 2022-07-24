@@ -18,7 +18,8 @@ class Credits
 	private:
 		sf::Font font;
 		sf::Text creditsText;
+		sf::Text escapeText;
 		//	Credits text to be displayed
 		std::string credits_Info ="Developed By \n Sujan Koirala\nSwikar Gautam";
+		std::string escLetter  = "ESC\n<";
 };
-

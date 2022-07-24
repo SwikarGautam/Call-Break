@@ -8,9 +8,9 @@ int main()
 {
 	//	Create window
 	sf::RenderWindow MENU_WINDOW, CREDITS_WINDOW;
-	MENU_WINDOW.create(sf::VideoMode(800, 600), "Call Break");
 
 	//	Main Menu window stuff
+	MENU_WINDOW.create(sf::VideoMode(800, 600), "Call Break");
 	Menu menu(MENU_WINDOW.getSize().x, MENU_WINDOW.getSize().y);
 
 	//	Credits window stuff
@@ -62,11 +62,9 @@ int main()
 					{
 						//	Show credits when 'Enter' pressed in Credits
 
-						//	First close menu window
-						MENU_WINDOW.close();
 
 						//	Create new Credits window
-						CREDITS_WINDOW.create(sf::VideoMode(800, 600), "Call Break");
+						CREDITS_WINDOW.create(sf::VideoMode(800, 600), "Credits");
 
 						//	Load texture for credits background
 						sf::Texture texture;
@@ -85,6 +83,15 @@ int main()
 								if (event.type == sf::Event::Closed)
 								{
 									CREDITS_WINDOW.close();
+								}
+								if (event.type == sf::Event::KeyPressed)
+								{
+									//	Esc  key pressed
+									if (event.key.code == sf::Keyboard::Escape)
+									{
+										//	Escape key pressed closes credits window
+										CREDITS_WINDOW.close();
+									}
 								}
 							}
 

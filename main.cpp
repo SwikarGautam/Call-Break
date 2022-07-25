@@ -53,12 +53,12 @@ int main()
 
 				if (event.key.code == sf::Keyboard::Return)
 				{
-					if (menu.getPressedLabel() == 0)
+					if (menu.getPressedLabel() == PLAY)	//	PLAY -> 0 from enum MENU_OPTIONS
 					{
 						//	Main Game loop here
 						std::cout << "Play pressed";
 					}
-					if (menu.getPressedLabel() == 1)
+					if (menu.getPressedLabel() == CREDITS)	//	CREDITS -> 1
 					{
 						//	Show credits when 'Enter' pressed in Credits
 
@@ -104,7 +104,7 @@ int main()
 							CREDITS_WINDOW.display();
 						}
 					}
-					if (menu.getPressedLabel() == 2)
+					if (menu.getPressedLabel() == QUIT)
 					{
 						MENU_WINDOW.close();
 						// std::cout << "Quit pressed"<<std::endl;

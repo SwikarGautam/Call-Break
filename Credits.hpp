@@ -7,6 +7,12 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 
+enum MENU_OPTIONS{
+	PLAY,
+	CREDITS,
+	QUIT
+};
+
 class Credits
 {
 	public:

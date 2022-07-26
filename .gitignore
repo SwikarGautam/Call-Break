@@ -3,3 +3,4 @@
 *.o
 *.exe
 merge.py
+rough.cpp

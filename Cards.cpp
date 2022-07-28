@@ -30,3 +30,9 @@ void Card::loadTexture(sf::Texture & texture){
     sprite.setTextureRect(sf::IntRect(140*x,190*y,140,190)); 
 }
 
+void Card::loadCardBackTexture(sf::Texture &texture){
+    sprite.setTexture(texture);
+    sprite.setTextureRect(sf::IntRect(0, 0,140,190)); 
+
+}
+

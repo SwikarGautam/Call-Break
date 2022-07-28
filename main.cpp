@@ -1,5 +1,6 @@
 #include "Menu.hpp"
 #include "Credits.hpp"
+#include "Play.hpp"
 
 #include <SFML/Graphics.hpp>
 #include <iostream>
@@ -57,6 +58,8 @@ int main()
 					{
 						//	Main Game loop here
 						std::cout << "Play pressed";
+						Play play;
+						play.playGame();
 					}
 					if (menu.getPressedLabel() == CREDITS)	//	CREDITS -> 1
 					{

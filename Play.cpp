@@ -43,6 +43,7 @@ void Play::playGame(){
             i->loadTexture(texture);
         }
     
+    //  Texture for table
     sf::Texture table_texture;
     if (!texture.loadFromFile("src/Images/table_back.jpg"))
     {

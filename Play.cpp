@@ -43,6 +43,14 @@ void Play::playGame(){
             i->loadTexture(texture);
         }
     
+    sf::Texture table_texture;
+    if (!texture.loadFromFile("src/Images/table_back.jpg"))
+    {
+        std::cout << "Error loading table background image.";
+    }
+    sf::Sprite tableBackground(texture);
+
+
     //create a player using those cards
     Player p1(card1, true);
 
@@ -71,6 +79,7 @@ void Play::playGame(){
 
         GAME_WINDOW.clear();
         // window.draw(p1.cards[0].sprite); 
+        GAME_WINDOW.draw(tableBackground);
         GAME_WINDOW.draw(cardBack[0]);
         GAME_WINDOW.draw(cardBack[1]);
         GAME_WINDOW.draw(cardBack[2]);

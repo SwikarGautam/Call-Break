@@ -26,7 +26,6 @@ void Play::playGame(){
 	}
 
     //  Load texture for card back
-    sf::Texture cardBackTexture;
 	if (!cardBackTexture.loadFromFile("src\\Images\\Cards\\cardBack\\cardBack_red1.png"))
 	{
 		std::cout << "Error loading cardBack image.";
@@ -34,12 +33,7 @@ void Play::playGame(){
 
     //  Array with 3 elements containing cardBack at 3 positions
 
-    sf::Sprite cardBack[3];
-
-    //  Get Sprite with specified arguments
-    cardBack[0] = getCardBackSprite(cardBackTexture, GAME_WIDTH/2 - 140/2, 0, false);
-    cardBack[1] = getCardBackSprite(cardBackTexture, 190, GAME_HEIGHT/2 - 190/2, true);
-    cardBack[2] = getCardBackSprite(cardBackTexture, GAME_WIDTH, GAME_HEIGHT/2 - 190/2, true);
+    showCardBacks();
 
     // seperate first 13 cards
     card1.assign(allCards.begin(),allCards.begin()+13);
@@ -53,26 +47,35 @@ void Play::playGame(){
     Player p1(card1, true);
 
     //display players first card
-    sf::RenderWindow window;
-    window.create(sf::VideoMode(GAME_WIDTH, GAME_HEIGHT), "Play Call Break");
-    while (window.isOpen())
+    sf::RenderWindow GAME_WINDOW;;
+    GAME_WINDOW.create(sf::VideoMode(GAME_WIDTH, GAME_HEIGHT), "Play Call Break");
+    while (GAME_WINDOW.isOpen())
     {
 		sf::Event event;
-		while (window.pollEvent(event))
+		while (GAME_WINDOW.pollEvent(event))
 		{
 				if (event.type == sf::Event::Closed)
 				{
-					window.close();
+					GAME_WINDOW.close();
 				}
+                if (event.type == sf::Event::KeyPressed)
+					{
+						//	Esc  key pressed
+						if (event.key.code == sf::Keyboard::Escape)
+                        {
+							//	Escape key pressed closes credits window
+							GAME_WINDOW.close();
+						}
+                    }
         }
 
-        window.clear();
+        GAME_WINDOW.clear();
         // window.draw(p1.cards[0].sprite); 
-        window.draw(cardBack[0]);
-        window.draw(cardBack[1]);
-        window.draw(cardBack[2]);
+        GAME_WINDOW.draw(cardBack[0]);
+        GAME_WINDOW.draw(cardBack[1]);
+        GAME_WINDOW.draw(cardBack[2]);
 
-        window.display();     
+        GAME_WINDOW.display();     
     }
 
 }
@@ -92,4 +95,14 @@ sf::Sprite Play::getCardBackSprite(sf::Texture & texture, int X_POS, int Y_POS, 
     backSprite.setTextureRect(sf::IntRect(0, 0,140,190));     
 
     return backSprite;
+}
+
+void Play::showCardBacks()
+{
+        //  Get Sprite with specified arguments
+    cardBack[0] = getCardBackSprite(cardBackTexture, GAME_WIDTH/2 - 140/2, 0, false);
+    cardBack[1] = getCardBackSprite(cardBackTexture, 190, GAME_HEIGHT/2 - 190/2, true);
+    cardBack[2] = getCardBackSprite(cardBackTexture, GAME_WIDTH, GAME_HEIGHT/2 - 190/2, true);
+
+
 }

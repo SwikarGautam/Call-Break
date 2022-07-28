@@ -22,8 +22,24 @@ void Play::playGame(){
     sf::Texture texture;
 	if (!texture.loadFromFile("src\\Images\\Cards\\cardFront\\all_cards.png"))
 	{
-		std::cout << "Error loading menu background image.";
+		std::cout << "Error loading card image.";
 	}
+
+    //  Load texture for card back
+    sf::Texture cardBackTexture;
+	if (!cardBackTexture.loadFromFile("src\\Images\\Cards\\cardBack\\cardBack_red1.png"))
+	{
+		std::cout << "Error loading cardBack image.";
+	}
+
+    //  Array with 3 elements containing cardBack at 3 positions
+
+    sf::Sprite cardBack[3];
+
+    //  Get Sprite with specified arguments
+    cardBack[0] = getCardBackSprite(cardBackTexture, GAME_WIDTH/2 - 140/2, 0, false);
+    cardBack[1] = getCardBackSprite(cardBackTexture, 190, GAME_HEIGHT/2 - 190/2, true);
+    cardBack[2] = getCardBackSprite(cardBackTexture, GAME_WIDTH, GAME_HEIGHT/2 - 190/2, true);
 
     // seperate first 13 cards
     card1.assign(allCards.begin(),allCards.begin()+13);
@@ -38,7 +54,7 @@ void Play::playGame(){
 
     //display players first card
     sf::RenderWindow window;
-    window.create(sf::VideoMode(800,600), "call");
+    window.create(sf::VideoMode(GAME_WIDTH, GAME_HEIGHT), "Play Call Break");
     while (window.isOpen())
     {
 		sf::Event event;
@@ -51,9 +67,29 @@ void Play::playGame(){
         }
 
         window.clear();
-        window.draw(p1.cards[0].sprite); 
+        // window.draw(p1.cards[0].sprite); 
+        window.draw(cardBack[0]);
+        window.draw(cardBack[1]);
+        window.draw(cardBack[2]);
+
         window.display();     
     }
 
 }
 
+//  Function to return sprite for back of card sprite
+
+sf::Sprite Play::getCardBackSprite(sf::Texture & texture, int X_POS, int Y_POS, bool rotateFlag){
+    sf::Sprite backSprite(texture);
+
+    //  Rotate sprite if flag set to true
+    if (rotateFlag){
+        backSprite.setRotation(90);
+    }
+    //  Specify position to blit on screen in vector form
+    backSprite.setPosition(sf::Vector2f(X_POS , Y_POS));
+
+    backSprite.setTextureRect(sf::IntRect(0, 0,140,190));     
+
+    return backSprite;
+}

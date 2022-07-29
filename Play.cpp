@@ -137,9 +137,6 @@ void Play::displayPlayerCards(sf::RenderWindow &window, Player p_1){
         p_sprite.setPosition(sf::Vector2f(Card::eachCardWidth*(i), 400));
         window.draw(p_sprite); 
     }
-    // sf::Sprite &p_sprite= p_1.cards[0].sprite; 
-    // p_sprite.setPosition(sf::Vector2f(500, 400));
-    // window.draw(p_sprite); 
 
 
 

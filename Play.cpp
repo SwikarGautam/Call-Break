@@ -83,7 +83,8 @@ void Play::playGame(){
         GAME_WINDOW.clear();
         GAME_WINDOW.draw(tableBackground);
 
-        GAME_WINDOW.draw(p1.cards[0].sprite); 
+        displayPlayerCards(GAME_WINDOW, p1);
+        // GAME_WINDOW.draw(p1.cards[0].sprite); 
         GAME_WINDOW.draw(cardBack[0]);
         GAME_WINDOW.draw(cardBack[1]);
         GAME_WINDOW.draw(cardBack[2]);
@@ -126,8 +127,22 @@ void Play::loadPlayerCard(std::vector<Card>& card, sf::Texture& texture)
     for(auto i=card.begin();i!=card.end();++i){
             i->loadTexture(texture);
         }
+}
 
-    std::cout << card.size() <<std::endl;
+//  Show player cards
+void Play::displayPlayerCards(sf::RenderWindow &window, Player p_1){
+    for (int i=0; i < 5; i++)
+    {
+        sf::Sprite &p_sprite= p_1.cards[i].sprite; 
+        p_sprite.setPosition(sf::Vector2f(Card::eachCardWidth*(i), 400));
+        window.draw(p_sprite); 
+    }
+    // sf::Sprite &p_sprite= p_1.cards[0].sprite; 
+    // p_sprite.setPosition(sf::Vector2f(500, 400));
+    // window.draw(p_sprite); 
+
+
+
 }
 
 int Play::getWinner(std::vector<Card> & gameCards){

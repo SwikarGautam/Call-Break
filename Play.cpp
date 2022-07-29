@@ -113,9 +113,9 @@ sf::Sprite Play::getCardBackSprite(sf::Texture & texture, int X_POS, int Y_POS, 
 void Play::showCardBacks()
 {
         //  Get Sprite with specified arguments
-    cardBack[0] = getCardBackSprite(cardBackTexture, GAME_WIDTH/2 - 140/2, 0, false);
-    cardBack[1] = getCardBackSprite(cardBackTexture, 190, GAME_HEIGHT/2 - 190/2, true);
-    cardBack[2] = getCardBackSprite(cardBackTexture, GAME_WIDTH, GAME_HEIGHT/2 - 190/2, true);
+    cardBack[0] = getCardBackSprite(cardBackTexture, GAME_WIDTH/2 - Card::eachCardWidth/2, 0, false);
+    cardBack[1] = getCardBackSprite(cardBackTexture, Card::eachCardHeight, GAME_HEIGHT/2 - Card::eachCardHeight/2, true);
+    cardBack[2] = getCardBackSprite(cardBackTexture, GAME_WIDTH, GAME_HEIGHT/2 - Card::eachCardHeight/2, true);
 
 
 }

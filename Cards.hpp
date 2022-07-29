@@ -8,8 +8,11 @@ class Card{
         int suit;
         int rank;
 
+
     public:
         sf::Sprite sprite;
+        static const int eachCardWidth = 140;
+        static const int eachCardHeight = 190;
         bool playable=false;
         Card(int s,int r);
         void loadTexture(sf::Texture & texture);

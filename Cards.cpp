@@ -27,7 +27,7 @@ void Card::loadTexture(sf::Texture & texture){
     int n = suit*13 + rank;
     int x = n % 9;
     int y = n / 9;
-    sprite.setTextureRect(sf::IntRect(140*x,190*y,140,190)); 
+    sprite.setTextureRect(sf::IntRect(eachCardWidth*x,eachCardHeight*y, eachCardWidth, eachCardHeight)); 
     sprite.setPosition(sf::Vector2f(300, 400));
 }
 

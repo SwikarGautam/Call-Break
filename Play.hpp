@@ -17,5 +17,7 @@ class Play{
     void playGame();
     sf::Sprite getCardBackSprite(sf::Texture & texture, int X_POS, int Y_POS, bool rotateFlag);
     void showCardBacks();
+    int getWinner(std::vector<Card> & gameCards);
+    void selectLegalCards (std::vector<Card> & playerCards, std::vector<Card> & gameCards);
 
 };

@@ -10,11 +10,11 @@ class Card{
 
     public:
         sf::Sprite sprite;
-        bool playable;
+        bool playable=false;
         Card(int s,int r);
         void loadTexture(sf::Texture & texture);
-        bool isGtrThan(Card c1);
-        void loadCardBackTexture(sf::Texture &texture);
-
-
+        int getSuit();
+        bool isSmlThan(const Card & c1);
+        void operator = (const Card & c1);
+        void display();
 };

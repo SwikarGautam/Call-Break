@@ -2,16 +2,16 @@
 
 
 
-bool Card::isGtrThan(Card c1){
+bool Card::isSmlThan(const Card &c1){
 
     if (c1.suit == suit)
-        return rank > c1.rank;
+        return rank < c1.rank;
     
     else if (c1.suit == 3)
-        return false;
+        return true;
 
     else 
-        return true;
+        return false;
     
 }
 
@@ -30,4 +30,15 @@ void Card::loadTexture(sf::Texture & texture){
     sprite.setTextureRect(sf::IntRect(140*x,190*y,140,190)); 
 }
 
+int Card::getSuit(){
+    return suit;
+}
 
+void Card:: operator=(const Card & c1){
+    suit = c1.suit;
+    rank = c1.rank;
+}
+
+void Card::display(){
+    std::cout<<"suit: "<<suit<<" rank: "<<rank<<std::endl;
+}

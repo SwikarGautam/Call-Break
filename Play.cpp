@@ -19,8 +19,8 @@ void Play::playGame(){
     std::random_shuffle(allCards.begin(),allCards.end());
     
     
-    sf::Texture texture;
-	if (!texture.loadFromFile("src\\Images\\Cards\\cardFront\\all_cards.png"))
+    sf::Texture cardFrontTexture;
+	if (!cardFrontTexture.loadFromFile("src\\Images\\Cards\\cardFront\\all_cards.png"))
 	{
 		std::cout << "Error loading card image.";
 	}
@@ -38,18 +38,20 @@ void Play::playGame(){
     // seperate first 13 cards
     card1.assign(allCards.begin(),allCards.begin()+13);
     
+    loadPlayerCard(card1, cardFrontTexture);
+    
     //load texture for the 13 cards
     for(auto i=card1.begin();i!=card1.end();++i){
-            i->loadTexture(texture);
+            i->loadTexture(cardFrontTexture);
         }
     
     //  Texture for table
     sf::Texture table_texture;
-    if (!texture.loadFromFile("src/Images/table_back.jpg"))
+    if (!table_texture.loadFromFile("src/Images/table_back.jpg"))
     {
         std::cout << "Error loading table background image.";
     }
-    sf::Sprite tableBackground(texture);
+    sf::Sprite tableBackground(table_texture);
 
 
     //create a player using those cards
@@ -79,8 +81,9 @@ void Play::playGame(){
         }
 
         GAME_WINDOW.clear();
-        // window.draw(p1.cards[0].sprite); 
         GAME_WINDOW.draw(tableBackground);
+
+        GAME_WINDOW.draw(p1.cards[0].sprite); 
         GAME_WINDOW.draw(cardBack[0]);
         GAME_WINDOW.draw(cardBack[1]);
         GAME_WINDOW.draw(cardBack[2]);
@@ -115,6 +118,16 @@ void Play::showCardBacks()
     cardBack[2] = getCardBackSprite(cardBackTexture, GAME_WIDTH, GAME_HEIGHT/2 - 190/2, true);
 
 
+}
+
+void Play::loadPlayerCard(std::vector<Card>& card, sf::Texture& texture)
+{
+    //load texture for the 13 cards
+    for(auto i=card.begin();i!=card.end();++i){
+            i->loadTexture(texture);
+        }
+
+    std::cout << card.size() <<std::endl;
 }
 
 int Play::getWinner(std::vector<Card> & gameCards){

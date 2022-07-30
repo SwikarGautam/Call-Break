@@ -132,19 +132,19 @@ void Play::loadPlayerCard(std::vector<Card>& card, sf::Texture& texture)
 }
 
 //  Show player cards
-void Play::displayPlayerCards(sf::RenderWindow &window, Player p_1){
-    for (int i=0; i < 13; i++)
+void Play::displayPlayerCards(sf::RenderWindow &window, Player& p_1){
+    int size = p_1.cards.size();
+    for (int i=0; i < size; i++)
     {
         sf::Sprite &p_sprite= p_1.cards[i].sprite; 
         //  define postion for player cards
-        p_sprite.setPosition(sf::Vector2f(70 + 55*(i), GAME_HEIGHT-150));
+        p_sprite.setPosition(sf::Vector2f(GAME_WIDTH/2-((size-1)*55+112)/2 + 55*(i), GAME_HEIGHT-150));
         window.draw(p_sprite); 
     }
 
-
-
 }
 
+//returns the index of winning card
 int Play::getWinner(std::vector<Card> & gameCards){
     int maxInd = 0;
 
@@ -156,56 +156,64 @@ int Play::getWinner(std::vector<Card> & gameCards){
     return maxInd;
 }
 
+
+//sets playable member of legal cards to true and other cards to false
+//legal cards are those cards which a player is allowed to throw given the gameCards
+//gameCards is a vector of Cards that prior players have thrown
 void Play::selectLegalCards (std::vector<Card> & playerCards, std::vector<Card> & gameCards){
     if (gameCards.size() == 0){
-
-    }
-    Card maxCard = gameCards[0];
-    int gameSuit = gameCards[0].getSuit();
-    bool setFlag = false;
-    bool containSpade = false;
-    for(auto i = gameCards.begin();i<gameCards.end();++i ){
-        if (i->getSuit()==3 && gameSuit!=3){
-            containSpade = true;
-        }
-        if (maxCard.isSmlThan(*i) && (i->getSuit()!=3|| gameSuit==3) ){
-            maxCard = *i;
-        }
-
-    }
-    maxCard.display();
-    for(auto i=playerCards.begin();i<playerCards.end();++i){
-        if(maxCard.isSmlThan(*i) && (i->getSuit()==gameSuit)){
+        for(auto i=playerCards.begin();i<playerCards.end();++i){
             i->playable = true;
-            setFlag = true;
-        }
-        else{
-            i->playable = false;
         }
     }
+    else {
+        Card maxCard = gameCards[0];
+        int gameSuit = gameCards[0].getSuit();
+        bool setFlag = false;
+        bool containSpade = false;
+        for(auto i = gameCards.begin();i<gameCards.end();++i ){
+            if (i->getSuit()==3 && gameSuit!=3){
+                containSpade = true;
+            }
+            if (maxCard.isSmlThan(*i) && (i->getSuit()!=3|| gameSuit==3) ){
+                maxCard = *i;
+            }
 
-    if (!setFlag || containSpade){
+        }
+
         for(auto i=playerCards.begin();i<playerCards.end();++i){
-            if(i->getSuit()==gameSuit){
+            if(maxCard.isSmlThan(*i) && (i->getSuit()==gameSuit)){
                 i->playable = true;
                 setFlag = true;
             }
-        }
-    }
-
-    if (!setFlag && gameSuit!=3){
-        for(auto i=playerCards.begin();i<playerCards.end();++i){
-            if(i->getSuit()==3){
-                i->playable = true;
-                setFlag = true;
+            else{
+                i->playable = false;
             }
         }
-    }
 
-    if (!setFlag){
-        for(auto i=playerCards.begin();i<playerCards.end();++i){
-            i->playable = true; 
-            setFlag = true;
-        }  
+        if (!setFlag || containSpade){
+            for(auto i=playerCards.begin();i<playerCards.end();++i){
+                if(i->getSuit()==gameSuit){
+                    i->playable = true;
+                    setFlag = true;
+                }
+            }
+        }
+
+        if (!setFlag && gameSuit!=3){
+            for(auto i=playerCards.begin();i<playerCards.end();++i){
+                if(i->getSuit()==3){
+                    i->playable = true;
+                    setFlag = true;
+                }
+            }
+        }
+
+        if (!setFlag){
+            for(auto i=playerCards.begin();i<playerCards.end();++i){
+                i->playable = true; 
+                setFlag = true;
+            }  
+        }
     }
 }

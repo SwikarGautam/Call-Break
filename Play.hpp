@@ -20,7 +20,7 @@ class Play{
     void loadPlayerCard(std::vector<Card>& card1, sf::Texture& texture);
 
     //  Display Player Cards at bottom
-    void displayPlayerCards(sf::RenderWindow &window, Player p_1);
+    void displayPlayerCards(sf::RenderWindow &window, Player &p_1);
     int getWinner(std::vector<Card> & gameCards);
     void selectLegalCards (std::vector<Card> & playerCards, std::vector<Card> & gameCards);
 

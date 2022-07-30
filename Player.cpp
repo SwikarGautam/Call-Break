@@ -7,3 +7,17 @@ Player::Player(std::vector<Card> & vect, bool user){
      isUser = user;
      
 }
+
+int Player::getCardIndex(const std::vector<Card>){
+     if (isUser){
+          if(hasSelected){
+               hasSelected = false;
+               return selectedCardIndex;
+          }
+          else{
+               return -1;}
+     }
+     else{
+          return 0;
+     }
+}

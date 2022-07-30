@@ -63,7 +63,7 @@ void Play::playGame(){
     Player p1(card1, true);
 
     //display players first card
-    sf::RenderWindow GAME_WINDOW;;
+    sf::RenderWindow GAME_WINDOW;
     GAME_WINDOW.create(sf::VideoMode(GAME_WIDTH, GAME_HEIGHT), "Play Call Break");
     while (GAME_WINDOW.isOpen())
     {
@@ -94,7 +94,11 @@ void Play::playGame(){
         GAME_WINDOW.draw(cardBack[1]);
         GAME_WINDOW.draw(cardBack[2]);
 
-        GAME_WINDOW.display();     
+        GAME_WINDOW.display();   
+        if (p1.bidWindowShown){
+            showBidWindow(p1.bidWindowShown);
+        } 
+
     }
 
 }
@@ -218,6 +222,36 @@ void Play::selectLegalCards (std::vector<Card> & playerCards, std::vector<Card> 
                 i->playable = true; 
                 setFlag = true;
             }  
+        }
+    }
+}
+
+
+//  Small Bid window
+void Play::showBidWindow(bool &bidWinShown){
+    sf::RenderWindow BID_WINDOW;
+
+    BID_WINDOW.create(sf::VideoMode(200, 200), "Call Your Bid");
+    while (BID_WINDOW.isOpen())
+    {
+		sf::Event event;
+		while (BID_WINDOW.pollEvent(event))
+		{
+				if (event.type == sf::Event::Closed)
+				{
+					BID_WINDOW.close();
+				}
+                if (event.type == sf::Event::TextEntered)
+                {
+                    int num = event.text.unicode - 48;
+                    //  To open window just once in game loop
+                    bidWinShown = false;
+                    if (num>0 && num<=8){
+                        std::cout << "Bid entered = " << num;   //  This is the user input bid no
+                        //  Close bid window only for bid range 1 - 8
+                        BID_WINDOW.close();
+                    }
+                }
         }
     }
 }

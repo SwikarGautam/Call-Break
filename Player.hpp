@@ -5,6 +5,7 @@
 
 class Player{
     public:
+        bool bidWindowShown = true;
         Player(std::vector<Card> & vect, bool user);
         std::vector<Card> cards;
         int getCardIndex(const std::vector<Card>);

@@ -4,14 +4,15 @@
 
 #include <SFML/Graphics.hpp>
 #include <iostream>
-
+#define MENU_WIDTH 900
+#define MENU_HEIGHT 600
 int main()
 {
 	//	Create window
 	sf::RenderWindow MENU_WINDOW, CREDITS_WINDOW;
 
 	//	Main Menu window stuff
-	MENU_WINDOW.create(sf::VideoMode(800, 600), "Call Break");
+	MENU_WINDOW.create(sf::VideoMode(MENU_WIDTH, MENU_HEIGHT), "Call Break");
 	Menu menu(MENU_WINDOW.getSize().x, MENU_WINDOW.getSize().y);
 
 	//	Credits window stuff
@@ -24,6 +25,7 @@ int main()
 		std::cout << "Error loading menu background image.";
 	}
 	sf::Sprite menuBackground(texture);
+	menuBackground.scale(sf::Vector2f(1.1, 1.1));
 
 	//	Game loop
 	while (MENU_WINDOW.isOpen())
@@ -67,7 +69,7 @@ int main()
 
 
 						//	Create new Credits window
-						CREDITS_WINDOW.create(sf::VideoMode(800, 600), "Credits");
+						CREDITS_WINDOW.create(sf::VideoMode(900, 600), "Credits");
 
 						//	Load texture for credits background
 						sf::Texture texture;

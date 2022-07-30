@@ -106,8 +106,10 @@ sf::Sprite Play::getCardBackSprite(sf::Texture & texture, int X_POS, int Y_POS, 
     //  Specify position to blit on screen in vector form
     backSprite.setPosition(sf::Vector2f(X_POS , Y_POS));
 
-    backSprite.setTextureRect(sf::IntRect(0, 0,140,190));     
+    backSprite.setTextureRect(sf::IntRect(0, 0,140,190)); 
 
+    //  Scale card back img    
+    backSprite.scale(sf::Vector2f(0.6, 0.6));
     return backSprite;
 }
 
@@ -115,7 +117,7 @@ void Play::showCardBacks()
 {
         //  Get Sprite with specified arguments
     cardBack[0] = getCardBackSprite(cardBackTexture, GAME_WIDTH/2 - Card::eachCardWidth/2, 0, false);
-    cardBack[1] = getCardBackSprite(cardBackTexture, Card::eachCardHeight, GAME_HEIGHT/2 - Card::eachCardHeight/2, true);
+    cardBack[1] = getCardBackSprite(cardBackTexture, 130, GAME_HEIGHT/2 - Card::eachCardHeight/2, true);
     cardBack[2] = getCardBackSprite(cardBackTexture, GAME_WIDTH, GAME_HEIGHT/2 - Card::eachCardHeight/2, true);
 
 
@@ -131,10 +133,11 @@ void Play::loadPlayerCard(std::vector<Card>& card, sf::Texture& texture)
 
 //  Show player cards
 void Play::displayPlayerCards(sf::RenderWindow &window, Player p_1){
-    for (int i=0; i < 5; i++)
+    for (int i=0; i < 13; i++)
     {
         sf::Sprite &p_sprite= p_1.cards[i].sprite; 
-        p_sprite.setPosition(sf::Vector2f(Card::eachCardWidth*(i), 400));
+        //  define postion for player cards
+        p_sprite.setPosition(sf::Vector2f(70 + 55*(i), GAME_HEIGHT-150));
         window.draw(p_sprite); 
     }
 

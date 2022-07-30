@@ -10,7 +10,7 @@ class Play{
     private:
         sf::Sprite cardBack[3];
         sf::Texture cardBackTexture;
-        int GAME_WIDTH = 800;
+        int GAME_WIDTH = 900;
         int GAME_HEIGHT = 600; 
     public:
 

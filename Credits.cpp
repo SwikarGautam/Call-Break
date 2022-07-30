@@ -34,7 +34,6 @@ Credits::Credits(float width)
 	// Postion for esc
 	escapeText.setPosition(sf::Vector2f(0, 0));
 
-
 }
 
 
@@ -47,13 +46,11 @@ void Credits::renderCredits(sf::RenderWindow& window){
 	
 
 	//	Credits Text motion Setting
-	creditsText.move(0, 0.6f);
+	creditsText.move(0, 0.1f);
 	if (creditsText.getPosition().y > (600))	//	Manually assigned 600
 	{
 		creditsText.setPosition(800 / 2 - 80, 0);	//	Manually assigned 800
 	}
 
 }
-
-
 

@@ -1,5 +1,10 @@
 #include "Play.hpp"
+#include <bits/stdc++.h>
 
+// Used for sorting Cards
+bool compare(Card & c1, Card & c2){
+    return c1.getN() > c2.getN();
+}
 
 void Play::playGame(){ 
 
@@ -37,7 +42,7 @@ void Play::playGame(){
 
     // seperate first 13 cards
     card1.assign(allCards.begin(),allCards.begin()+13);
-    
+    sort(card1.begin(),card1.end(),compare);
     loadPlayerCard(card1, cardFrontTexture);
     
     //load texture for the 13 cards
@@ -119,7 +124,6 @@ void Play::showCardBacks()
     cardBack[0] = getCardBackSprite(cardBackTexture, GAME_WIDTH/2 - Card::eachCardWidth/2, 0, false);
     cardBack[1] = getCardBackSprite(cardBackTexture, 130, GAME_HEIGHT/2 - Card::eachCardHeight/2, true);
     cardBack[2] = getCardBackSprite(cardBackTexture, GAME_WIDTH, GAME_HEIGHT/2 - Card::eachCardHeight/2, true);
-
 
 }
 

@@ -44,3 +44,7 @@ void Card:: operator=(const Card & c1){
 void Card::display(){
     std::cout<<"suit: "<<suit<<" rank: "<<rank<<std::endl;
 }
+
+int Card::getN(){
+    return suit*13 + rank;
+}

@@ -267,7 +267,7 @@ void Play::showBidWindow(bool &bidWinShown){
 				}
                 if (event.type == sf::Event::TextEntered)
                 {
-                    int num = event.text.unicode - 48;
+                    int num = event.text.unicode - 48;  // get ascii for digit entered and convert again to num
                     //  To open window just once in game loop
                     bidWinShown = false;
                     if (num>0 && num<=8){

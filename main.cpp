@@ -9,14 +9,12 @@
 int main()
 {
 	//	Create window
-	sf::RenderWindow MENU_WINDOW, CREDITS_WINDOW;
+	sf::RenderWindow MENU_WINDOW;
 
 	//	Main Menu window stuff
 	MENU_WINDOW.create(sf::VideoMode(MENU_WIDTH, MENU_HEIGHT), "Call Break");
 	Menu menu(MENU_WINDOW.getSize().x, MENU_WINDOW.getSize().y);
 
-	//	Credits window stuff
-	Credits creditsObj(MENU_WINDOW.getSize().x);
 
 	//	Load texture for background image and load img
 	sf::Texture texture;
@@ -66,48 +64,8 @@ int main()
 					if (menu.getPressedLabel() == CREDITS)	//	CREDITS -> 1
 					{
 						//	Show credits when 'Enter' pressed in Credits
-
-
-						//	Create new Credits window
-						CREDITS_WINDOW.create(sf::VideoMode(900, 600), "Credits");
-
-						//	Load texture for credits background
-						sf::Texture texture;
-						if (!texture.loadFromFile("src/Images/creditsBackground.jpg"))
-						{
-							std::cout << "Error loading menu background image.";
-						}
-						sf::Sprite creditsBackground(texture);
-
-						//	Game loop
-						while (CREDITS_WINDOW.isOpen())
-						{
-							sf::Event event;
-							while (CREDITS_WINDOW.pollEvent(event))
-							{
-								if (event.type == sf::Event::Closed)
-								{
-									CREDITS_WINDOW.close();
-								}
-								if (event.type == sf::Event::KeyPressed)
-								{
-									//	Esc  key pressed
-									if (event.key.code == sf::Keyboard::Escape)
-									{
-										//	Escape key pressed closes credits window
-										CREDITS_WINDOW.close();
-									}
-								}
-							}
-
-							CREDITS_WINDOW.draw(creditsBackground);
-
-							//	Render text
-							creditsObj.renderCredits(CREDITS_WINDOW);
-
-							//	end of current frame
-							CREDITS_WINDOW.display();
-						}
+						Credits credits;
+						credits.openCreditsWindow();
 					}
 					if (menu.getPressedLabel() == QUIT)
 					{

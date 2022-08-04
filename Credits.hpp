@@ -18,8 +18,10 @@ class Credits
 	public:
 		//	Credits animation
 		//	Constructor
-		Credits(float width);
+		Credits();
 		void renderCredits(sf::RenderWindow& window);
+		void openCreditsWindow();
+
 
 	private:
 		sf::Font font;
@@ -27,5 +29,5 @@ class Credits
 		sf::Text escapeText;
 		//	Credits text to be displayed
 		std::string credits_Info ="Developed By \n Sujan Koirala\nSwikar Gautam";
-		std::string escLetter  = "ESC\n<";
+		std::string escLetter  = "ESC\n";
 };

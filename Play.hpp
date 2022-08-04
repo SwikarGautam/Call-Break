@@ -28,5 +28,12 @@ class Play{
     //  Show bid window
     void showBidWindow(bool &bidWinShown);
 
+    //  Returns true for player card clicked
+    bool checkForMouseTrigger(sf::Sprite &av_Sprite, sf::RenderWindow &av_Window);
+
+    //  Decide to move player card forward
+    void checkToMoveCardForward(sf::Sprite &card_sprite, sf::RenderWindow &window);
+
+
 };
 

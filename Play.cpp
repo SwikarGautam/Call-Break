@@ -94,6 +94,11 @@ void Play::playGame(){
         GAME_WINDOW.draw(cardBack[1]);
         GAME_WINDOW.draw(cardBack[2]);
 
+        //  Check for click of all 13 player cards
+        for (int i = 0; i<13; i++){
+            checkToMoveCardForward(p1.cards[i].sprite, GAME_WINDOW);
+        }
+
         GAME_WINDOW.display();   
         if (p1.bidWindowShown){
             showBidWindow(p1.bidWindowShown);
@@ -226,6 +231,25 @@ void Play::selectLegalCards (std::vector<Card> & playerCards, std::vector<Card> 
     }
 }
 
+//  Check if sprite is clicked through mouse
+bool Play::checkForMouseTrigger(sf::Sprite &av_Sprite, sf::RenderWindow &av_Window)
+{
+
+    int mouseX = sf::Mouse::getPosition().x;
+    int mouseY = sf::Mouse::getPosition().y;
+    sf::Vector2i windowPosition = av_Window.getPosition();
+
+    if(mouseX > av_Sprite.getPosition().x + windowPosition.x && mouseX < ( av_Sprite.getPosition().x + av_Sprite.getGlobalBounds().width + windowPosition.x - 20)
+        && mouseY > av_Sprite.getPosition().y + windowPosition.y + 30  && mouseY < ( av_Sprite.getPosition().y + av_Sprite.getGlobalBounds().height + windowPosition.y + 30) )
+    {
+        if(sf::Mouse::isButtonPressed(sf::Mouse::Left))
+        {
+            return true;
+        }
+        return false;
+    }
+    return false;
+}
 
 //  Small Bid window
 void Play::showBidWindow(bool &bidWinShown){
@@ -254,4 +278,14 @@ void Play::showBidWindow(bool &bidWinShown){
                 }
         }
     }
+}
+
+//  Function to move sprite (but doesn't at the moment )
+void Play::checkToMoveCardForward(sf::Sprite &card_sprite, sf::RenderWindow &window){
+        bool mouseClick = checkForMouseTrigger(card_sprite, window);
+        if(mouseClick)
+        {
+            std::cout << "Card clicked" <<std::endl;
+            // card_sprite.move(sf::Vector2f(400, 400));
+        }
 }

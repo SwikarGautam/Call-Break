@@ -2,6 +2,7 @@
 
 
 #include "Credits.hpp"
+#include "Menu.hpp"
 
 Credits::Credits()
 {
@@ -87,6 +88,8 @@ void Credits::openCreditsWindow(){
 				{
 					//	Escape key pressed closes credits window
 					CREDITS_WINDOW.close();
+					Menu menu;
+					menu.openMainMenuWindow();
 				}
 			}
 		}

@@ -1,4 +1,5 @@
 #include "Play.hpp"
+#include "Menu.hpp"
 #include <bits/stdc++.h>
 
 // Used for sorting Cards
@@ -81,6 +82,10 @@ void Play::playGame(){
                         {
 							//	Escape key pressed closes credits window
 							GAME_WINDOW.close();
+
+                            Menu menu;
+                            menu.openMainMenuWindow();
+
 						}
                     }
         }

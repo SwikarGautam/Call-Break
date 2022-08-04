@@ -6,6 +6,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <iostream>
+#include "Menu.hpp"
 
 enum MENU_OPTIONS{
 	PLAY,

@@ -4,89 +4,9 @@
 
 #include <SFML/Graphics.hpp>
 #include <iostream>
-#define MENU_WIDTH 900
-#define MENU_HEIGHT 600
 int main()
 {
-	//	Create window
-	sf::RenderWindow MENU_WINDOW;
-
-	//	Main Menu window stuff
-	MENU_WINDOW.create(sf::VideoMode(MENU_WIDTH, MENU_HEIGHT), "Call Break");
-	Menu menu(MENU_WINDOW.getSize().x, MENU_WINDOW.getSize().y);
-
-
-	//	Load texture for background image and load img
-	sf::Texture texture;
-	if (!texture.loadFromFile("src/Images/card_background_menu.jpg"))
-	{
-		std::cout << "Error loading menu background image.";
-	}
-	sf::Sprite menuBackground(texture);
-	menuBackground.scale(sf::Vector2f(1.1, 1.1));
-
-	//	Game loop
-	while (MENU_WINDOW.isOpen())
-	{
-		sf::Event event;
-		while (MENU_WINDOW.pollEvent(event))
-		{
-			if (event.type == sf::Event::Closed)
-			{
-				MENU_WINDOW.close();
-			}
-			if (event.type == sf::Event::KeyPressed)
-			{
-				//	Up arrow key pressed
-				if (event.key.code == sf::Keyboard::Up)
-				{
-					//	Shift selected label to down
-					menu.moveUp();
-				}
-				//	Down arrow key pressed
-				if (event.key.code == sf::Keyboard::Down)
-				{
-					//	Shift selected label to down
-					menu.moveDown();
-				}
-
-				//	Enter key pressed
-
-				if (event.key.code == sf::Keyboard::Return)
-				{
-					if (menu.getPressedLabel() == PLAY)	//	PLAY -> 0 from enum MENU_OPTIONS
-					{
-						//	Main Game loop here
-						std::cout << "Play pressed";
-						Play play;
-						play.playGame();
-					}
-					if (menu.getPressedLabel() == CREDITS)	//	CREDITS -> 1
-					{
-						//	Show credits when 'Enter' pressed in Credits
-						Credits credits;
-						credits.openCreditsWindow();
-					}
-					if (menu.getPressedLabel() == QUIT)
-					{
-						MENU_WINDOW.close();
-						// std::cout << "Quit pressed"<<std::endl;
-					}
-				}
-			}
-		}
-
-		MENU_WINDOW.clear();
-
-		//	Draw menu background
-		MENU_WINDOW.draw(menuBackground);
-		
-		//	Member function of menu obj to draw menu
-		menu.draw(MENU_WINDOW);
-
-		//	end of current frame
-
-		MENU_WINDOW.display();
-	}
+	Menu menu;
+	menu.openMainMenuWindow();
 	return 0;
 }

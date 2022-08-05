@@ -28,8 +28,8 @@ class Menu
 		int getPressedLabel();
 		void openMainMenuWindow();
 		void closeMainMenuWindow();
-		void checkUsingMouse(sf::Vector2i mouseCLickPos);
-		int returnClickedValue(sf::Vector2i mouseClickPos);
+		void trackMousePosition(sf::Vector2i mouseCLickPos);
+		int clickedMenuValue(sf::Vector2i mouseClickPos);
 
 
 	private:

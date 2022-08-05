@@ -68,7 +68,6 @@ void Menu::moveDown(){
 }
 
 int Menu::getPressedLabel(){
-	std::cout << selectedLabelIndex;
 	return selectedLabelIndex;
 }
 
@@ -94,7 +93,7 @@ void Menu::openMainMenuWindow(){
 	{
 		sf::Event event;
 		sf::Vector2i mouseClkPosition = sf::Mouse::getPosition(MENU_WINDOW);
-        checkUsingMouse(mouseClkPosition);
+        trackMousePosition(mouseClkPosition);
 
 		while (MENU_WINDOW.pollEvent(event))
 		{
@@ -102,7 +101,7 @@ void Menu::openMainMenuWindow(){
 			{
 				MENU_WINDOW.close();
 			}
-			if (event.type == sf::Event::KeyPressed)
+			if (event.type == sf::Event::KeyPressed || event.type == sf::Event::MouseButtonPressed)
 			{
 				//	Up arrow key pressed
 				if (event.key.code == sf::Keyboard::Up)
@@ -122,9 +121,9 @@ void Menu::openMainMenuWindow(){
 				sf::Vector2i mouseClickPos = sf::Mouse::getPosition(MENU_WINDOW);
 				
 
-				if (event.key.code == sf::Keyboard::Return || event.type == sf::Event::MouseButtonPressed)
+				if (event.key.code == sf::Keyboard::Return || sf::Mouse::isButtonPressed(sf::Mouse::Left))
 				{
-					if (getPressedLabel() == PLAY || returnClickedValue(mouseClickPos) == PLAY)	//	PLAY -> 0 from enum MENU_OPTIONS
+					if (getPressedLabel() == PLAY || clickedMenuValue(mouseClickPos) == PLAY)	//	PLAY -> 0 from enum MENU_OPTIONS
 					{
 
 						//	Main Game
@@ -133,19 +132,17 @@ void Menu::openMainMenuWindow(){
 						Play play;
 						play.playGame();
 					}
-					if (getPressedLabel() == CREDITS || returnClickedValue(mouseClickPos) == CREDITS)	//	CREDITS -> 1
+					if (getPressedLabel() == CREDITS || clickedMenuValue(mouseClickPos) == CREDITS)	//	CREDITS -> 1
 					{
 						//	Show credits when 'Enter' pressed in Credits
-						std::cout << "Into credits";
 						//	First close Main Menu
 						closeMainMenuWindow();
 						Credits credits;
 						credits.openCreditsWindow();
 					}
-					if (getPressedLabel() == QUIT || returnClickedValue(mouseClickPos) == QUIT)
+					if (getPressedLabel() == QUIT || clickedMenuValue(mouseClickPos) == QUIT)
 					{
 						MENU_WINDOW.close();
-						// std::cout << "Quit pressed"<<std::endl;
 					}
 				}
 			}
@@ -169,7 +166,7 @@ void Menu::closeMainMenuWindow(){
 	MENU_WINDOW.close();
 }
 
-void Menu::checkUsingMouse(sf::Vector2i mouseClickPos) {
+void Menu::trackMousePosition(sf::Vector2i mouseClickPos) {
 
 
 	//For Play
@@ -197,11 +194,10 @@ void Menu::checkUsingMouse(sf::Vector2i mouseClickPos) {
 		selectedLabelIndex = 2;
 		menu[2].setFillColor(sf::Color::Red);
 	}
-
-
-
 }
-int Menu::returnClickedValue(sf::Vector2i mouseClickPos) {
+
+int Menu::clickedMenuValue(sf::Vector2i mouseClickPos) {
+
 	if (mouseClickPos.x <= menu[0].getPosition().x + 50 && mouseClickPos.x >= menu[0].getPosition().x && mouseClickPos.y <= menu[0].getPosition().y + 30 && mouseClickPos.y >= menu[0].getPosition().y) {
 		return 0;
 	}
@@ -213,7 +209,7 @@ int Menu::returnClickedValue(sf::Vector2i mouseClickPos) {
 		return 2;
 	}
 	else {
-		return 10;
+		return 100;
 	}
 	
 }

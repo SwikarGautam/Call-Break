@@ -260,7 +260,33 @@ bool Play::checkForMouseTrigger(sf::Sprite &av_Sprite, sf::RenderWindow &av_Wind
 void Play::showBidWindow(bool &bidWinShown){
     sf::RenderWindow BID_WINDOW;
 
-    BID_WINDOW.create(sf::VideoMode(200, 200), "Call Your Bid");
+    BID_WINDOW.create(sf::VideoMode(300, 200), "Call Your Bid");
+
+    	//	Load texture for background image and load img
+	sf::Texture texture;
+	if (!texture.loadFromFile("src/Images/bidWindowBackground.jpg"))
+	{
+		std::cout << "Error loading bid window background image.";
+	}
+	sf::Sprite bidWinBackground(texture);
+	bidWinBackground.scale(sf::Vector2f(1.1, 1.1));
+
+    //	Load Font
+    sf::Font font;
+	if (!font.loadFromFile("src/Font/freesansbold.ttf"))
+	{
+		//	Error handling
+		std::cout << "Error loading font." << std::endl;
+	}
+    sf::Text bidPromptText;
+
+	//	Loading credits Text 
+	//	You can set credit texts attributes here
+	bidPromptText.setFont(font);
+	bidPromptText.setCharacterSize(24);
+	bidPromptText.setFillColor(sf::Color::White);
+	bidPromptText.setString("Enter bid (0-8)");
+
     while (BID_WINDOW.isOpen())
     {
 		sf::Event event;
@@ -282,6 +308,10 @@ void Play::showBidWindow(bool &bidWinShown){
                     }
                 }
         }
+        BID_WINDOW.clear();
+        BID_WINDOW.draw(bidWinBackground);
+        BID_WINDOW.draw(bidPromptText);
+        BID_WINDOW.display();
     }
 }
 

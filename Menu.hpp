@@ -9,6 +9,13 @@
 #include <SFML/Graphics.hpp>
 #define MAX_NUMBER_OF_LABELS 3
 
+
+enum MENU_OPTIONS{
+	PLAY,
+	CREDITS,
+	QUIT
+};
+
 class Menu
 {
 	public:
@@ -21,6 +28,8 @@ class Menu
 		int getPressedLabel();
 		void openMainMenuWindow();
 		void closeMainMenuWindow();
+		void trackMousePosition(sf::Vector2i mouseCLickPos);
+		int clickedMenuValue(sf::Vector2i mouseClickPos);
 
 
 	private:

@@ -92,13 +92,16 @@ void Menu::openMainMenuWindow(){
 	while (MENU_WINDOW.isOpen())
 	{
 		sf::Event event;
+		sf::Vector2i mouseClkPosition = sf::Mouse::getPosition(MENU_WINDOW);
+        trackMousePosition(mouseClkPosition);
+
 		while (MENU_WINDOW.pollEvent(event))
 		{
 			if (event.type == sf::Event::Closed)
 			{
 				MENU_WINDOW.close();
 			}
-			if (event.type == sf::Event::KeyPressed)
+			if (event.type == sf::Event::KeyPressed || event.type == sf::Event::MouseButtonPressed)
 			{
 				//	Up arrow key pressed
 				if (event.key.code == sf::Keyboard::Up)
@@ -114,10 +117,13 @@ void Menu::openMainMenuWindow(){
 				}
 
 				//	Enter key pressed
+				
+				sf::Vector2i mouseClickPos = sf::Mouse::getPosition(MENU_WINDOW);
+				
 
-				if (event.key.code == sf::Keyboard::Return)
+				if (event.key.code == sf::Keyboard::Return || sf::Mouse::isButtonPressed(sf::Mouse::Left))
 				{
-					if (getPressedLabel() == PLAY)	//	PLAY -> 0 from enum MENU_OPTIONS
+					if (getPressedLabel() == PLAY || clickedMenuValue(mouseClickPos) == PLAY)	//	PLAY -> 0 from enum MENU_OPTIONS
 					{
 
 						//	Main Game
@@ -126,19 +132,17 @@ void Menu::openMainMenuWindow(){
 						Play play;
 						play.playGame();
 					}
-					if (getPressedLabel() == CREDITS)	//	CREDITS -> 1
+					if (getPressedLabel() == CREDITS || clickedMenuValue(mouseClickPos) == CREDITS)	//	CREDITS -> 1
 					{
 						//	Show credits when 'Enter' pressed in Credits
-
 						//	First close Main Menu
 						closeMainMenuWindow();
 						Credits credits;
 						credits.openCreditsWindow();
 					}
-					if (getPressedLabel() == QUIT)
+					if (getPressedLabel() == QUIT || clickedMenuValue(mouseClickPos) == QUIT)
 					{
 						MENU_WINDOW.close();
-						// std::cout << "Quit pressed"<<std::endl;
 					}
 				}
 			}
@@ -160,4 +164,52 @@ void Menu::openMainMenuWindow(){
 
 void Menu::closeMainMenuWindow(){
 	MENU_WINDOW.close();
+}
+
+void Menu::trackMousePosition(sf::Vector2i mouseClickPos) {
+
+
+	//For Play
+	if (mouseClickPos.x <= menu[0].getPosition().x + 100 && mouseClickPos.x >= menu[0].getPosition().x && mouseClickPos.y <= menu[0].getPosition().y + 30 && mouseClickPos.y >= menu[0].getPosition().y) {
+		//menu[selectedLabelIndex].setFillColor(sf::Color::White);
+		menu[1].setFillColor(sf::Color::White);
+		menu[2].setFillColor(sf::Color::White);
+		selectedLabelIndex = 0;
+		menu[0].setFillColor(sf::Color::Red);
+	}
+
+	//For credits
+	if (mouseClickPos.x <= menu[1].getPosition().x + 200 && mouseClickPos.x >= menu[1].getPosition().x && mouseClickPos.y <= menu[1].getPosition().y + 50 && mouseClickPos.y >= menu[1].getPosition().y) {
+		menu[0].setFillColor(sf::Color::White);
+		menu[2].setFillColor(sf::Color::White);
+		selectedLabelIndex = 1;
+		menu[1].setFillColor(sf::Color::Red);
+	}
+
+	//For exit
+	if (mouseClickPos.x <= menu[2].getPosition().x + 120 && mouseClickPos.x >= menu[2].getPosition().x && mouseClickPos.y <= menu[2].getPosition().y + 30 && mouseClickPos.y >= menu[2].getPosition().y) {
+		//menu[selectedLabelIndex].setFillColor(sf::Color::White);
+		menu[0].setFillColor(sf::Color::White);
+		menu[1].setFillColor(sf::Color::White);
+		selectedLabelIndex = 2;
+		menu[2].setFillColor(sf::Color::Red);
+	}
+}
+
+int Menu::clickedMenuValue(sf::Vector2i mouseClickPos) {
+
+	if (mouseClickPos.x <= menu[0].getPosition().x + 50 && mouseClickPos.x >= menu[0].getPosition().x && mouseClickPos.y <= menu[0].getPosition().y + 30 && mouseClickPos.y >= menu[0].getPosition().y) {
+		return 0;
+	}
+		
+	else if (mouseClickPos.x <= menu[1].getPosition().x + 80 && mouseClickPos.x >= menu[1].getPosition().x && mouseClickPos.y <= menu[1].getPosition().y + 50 && mouseClickPos.y >= menu[1].getPosition().y) {
+		return 1;
+	}
+	else if (mouseClickPos.x <= menu[2].getPosition().x + 50 && mouseClickPos.x >= menu[2].getPosition().x && mouseClickPos.y <= menu[2].getPosition().y + 30 && mouseClickPos.y >= menu[2].getPosition().y) {
+		return 2;
+	}
+	else {
+		return 100;
+	}
+	
 }

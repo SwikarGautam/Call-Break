@@ -315,7 +315,18 @@ bool Play::checkForMouseTrigger(sf::Sprite &av_Sprite, sf::RenderWindow &av_Wind
 int Play::showBidWindow(){
     sf::RenderWindow BID_WINDOW;
 
-    BID_WINDOW.create(sf::VideoMode(200, 200), "Call Your Bid");
+    BID_WINDOW.create(sf::VideoMode(430, 210), "Call Your Bid", sf::Style::None);
+
+    	//	Load texture for background image and load img
+	sf::Texture texture;
+	if (!texture.loadFromFile("src/Images/bidWindowBackground.jpg"))
+	{
+		std::cout << "Error loading bid window background image.";
+	}
+	sf::Sprite bidWinBackground(texture);
+	bidWinBackground.scale(sf::Vector2f(0.8, 0.8));
+
+
     while (BID_WINDOW.isOpen())
     {
 		sf::Event event;
@@ -337,6 +348,9 @@ int Play::showBidWindow(){
                     }
                 }
         }
+        BID_WINDOW.clear();
+        BID_WINDOW.draw(bidWinBackground);
+        BID_WINDOW.display();
     }
     return -1;
 }

@@ -8,11 +8,7 @@
 #include <iostream>
 #include "Menu.hpp"
 
-enum MENU_OPTIONS{
-	PLAY,
-	CREDITS,
-	QUIT
-};
+
 
 class Credits
 {

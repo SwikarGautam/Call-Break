@@ -2,22 +2,23 @@
 #include<vector>
 #include"Cards.hpp"
 
-Player::Player(std::vector<Card> & vect, bool user){
+Player::Player(std::vector<Card> vect, bool user){
      cards = vect;
      isUser = user;
      
 }
 
-int Player::getCardIndex(const std::vector<Card>){
-     if (isUser){
-          if(hasSelected){
-               hasSelected = false;
-               return selectedCardIndex;
+ int Player::getCardIndex(const std::vector<Card>){
+     for(int i=0; i<cards.size();i++){
+          if (cards[i].playable){
+               return i;
           }
-          else{
-               return -1;}
      }
-     else{
-          return 0;
+     return -1;
+}
+
+void Player::setBid(int round){
+     if (!isUser){
+          bids[round] = 3;
      }
 }

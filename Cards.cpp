@@ -16,10 +16,11 @@ bool Card::isSmlThan(const Card &c1){
 }
 
 
-Card::Card(int s, int r){
-    suit = s;
-    rank = r;
+Card::Card(int s, int r):suit(s), rank(r){
 }
+
+// Card::Card( Card & c1):suit(c1.suit), rank(c1.rank){
+// }
 
 void Card::loadTexture(sf::Texture & texture){
     sprite.setTexture(texture);
@@ -36,15 +37,15 @@ int Card::getSuit(){
     return suit;
 }
 
-void Card:: operator=(const Card & c1){
-    suit = c1.suit;
-    rank = c1.rank;
-}
-
 void Card::display(){
     std::cout<<"suit: "<<suit<<" rank: "<<rank<<std::endl;
 }
 
 int Card::getN(){
     return suit*13 + rank;
+}
+
+void Card::operator=(const Card & c1){
+    suit = c1.suit;
+    rank = c1.rank;
 }

@@ -6,9 +6,9 @@
 class Player{
     public:
         bool bidWindowShown = true;
-        Player(std::vector<Card> & vect, bool user);
+        Player(std::vector<Card>  vect, bool user);
         std::vector<Card> cards;
-        int getCardIndex(const std::vector<Card>);
+        int getCardIndex(const std::vector<Card> gameCards);
         bool isUser;
         int bids[5] = {-99,-99,-99,-99,-99};
         int round_score;
@@ -16,5 +16,6 @@ class Player{
         int setUserSelectedCard();
         int selectedCardIndex;
         bool hasSelected = false;
+        void setBid(int round);
         
 };

@@ -11,9 +11,15 @@ class Play{
         sf::Sprite cardBack[3];
         sf::Texture cardBackTexture;
         int GAME_WIDTH = 900;
-        int GAME_HEIGHT = 600; 
+        int GAME_HEIGHT = 600;
+        int playerInd;
+        int turnInd=0;
+        std::vector<Player> players;
+        std::vector<Card> gameCards;
         
     public:
+    Play();
+    sf::Texture cardFrontTexture;
     bool bidWindowShown = true;
     void playGame();
     sf::Sprite getCardBackSprite(sf::Texture & texture, int X_POS, int Y_POS, bool rotateFlag);
@@ -21,18 +27,21 @@ class Play{
     void loadPlayerCard(std::vector<Card>& card1, sf::Texture& texture);
 
     //  Display Player Cards at bottom
-    void displayPlayerCards(sf::RenderWindow &window, Player &p_1);
-    int getWinner(std::vector<Card> & gameCards);
+    void setPlayerCardsPos( std::vector<Card> &pCards);
+    void drawPlayersCards(sf::RenderWindow &window, std::vector<Card> &pCards);
+    int getWinner();
     void selectLegalCards (std::vector<Card> & playerCards, std::vector<Card> & gameCards);
 
     //  Show bid window
-    void showBidWindow(bool &bidWinShown);
+    int showBidWindow();
 
     //  Returns true for player card clicked
     bool checkForMouseTrigger(sf::Sprite &av_Sprite, sf::RenderWindow &av_Window);
 
     //  Decide to move player card forward
     void checkToMoveCardForward(sf::Sprite &card_sprite, sf::RenderWindow &window);
+
+    void drawGameCards(int startInd);   
 
 
 };

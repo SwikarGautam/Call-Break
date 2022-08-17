@@ -18,7 +18,8 @@ class Card{
         void loadTexture(sf::Texture & texture);
         int getSuit();
         bool isSmlThan(const Card & c1);
-        void operator = (const Card & c1);
+        // Card(Card & c1);
+        void operator=(const Card & c1);
         void display();
         int getN();
 };

@@ -7,29 +7,37 @@ bool compare(Card & c1, Card & c2){
     return c1.getN() > c2.getN();
 }
 
-void Play::playGame(){ 
-
-    //  All the rough game code remains here
-
+Play::Play(){
     std::vector<Card> allCards; //It is a vector for all 52 cards
-    std::vector<Card> card1;
-    std::vector<Card>::iterator f;
+    std::vector<Card> cardn;
+//     std::vector<Card>::iterator f;
 
-    // Initializing all the cards and adding to allCards(which is an array or collection)
-    for(int i =0;i<4;i++){
+//     // Initializing all the cards and adding to allCards
+    for(int i=0;i<4;i++){
         for(int j = 0;j<13;j++){
             allCards.push_back(Card(i,j));
         }
     }
-    // shuffling cards (doesn't work) currently
+//     // shuffling cards (doesn't work) currently
     std::random_shuffle(allCards.begin(),allCards.end());
     
-    
-    sf::Texture cardFrontTexture;
 	if (!cardFrontTexture.loadFromFile("src\\Images\\Cards\\cardFront\\all_cards.png"))
 	{
 		std::cout << "Error loading card image.";
 	}
+    srand(time(0));
+    playerInd = rand()%4;
+    // loadPlayerCard(allCards,texture);
+    for(int i=0;i<4;i++){
+        cardn.assign(allCards.begin()+13*i,allCards.begin()+13*(i+1));
+        sort(cardn.begin(),cardn.end(),compare);
+        players.push_back(Player(cardn,i==playerInd));
+    }
+    // loadPlayerCard(players[playerInd].cards,cardFrontTexture);
+}
+
+
+void Play::playGame(){ 
 
     //  Load texture for card back
 	if (!cardBackTexture.loadFromFile("src\\Images\\Cards\\cardBack\\cardBack_red1.png"))
@@ -38,18 +46,7 @@ void Play::playGame(){
 	}
 
     //  Array with 3 elements containing cardBack at 3 positions
-
     showCardBacks();
-
-    // seperate first 13 cards
-    card1.assign(allCards.begin(),allCards.begin()+13);
-    sort(card1.begin(),card1.end(),compare);
-    loadPlayerCard(card1, cardFrontTexture);
-    
-    //load texture for the 13 cards
-    for(auto i=card1.begin();i!=card1.end();++i){
-            i->loadTexture(cardFrontTexture);
-        }
     
     //  Texture for table
     sf::Texture table_texture;
@@ -59,20 +56,21 @@ void Play::playGame(){
     }
     sf::Sprite tableBackground(table_texture);
 
+    loadPlayerCard(players[playerInd].cards,cardFrontTexture);
 
-    //create a player using those cards
-    Player p1(card1, true);
-
-    //display players first card
     sf::RenderWindow GAME_WINDOW;
     GAME_WINDOW.create(sf::VideoMode(GAME_WIDTH, GAME_HEIGHT), "Play Call Break");
+    turnInd = rand()%4;
+    bool roundStarted = false;
+    int round = 0;
+    int bid, winInd = turnInd;
     while (GAME_WINDOW.isOpen())
     {
 		sf::Event event;
 		while (GAME_WINDOW.pollEvent(event))
 		{
 				if (event.type == sf::Event::Closed)
-				{
+				{   
 					GAME_WINDOW.close();
 				}
                 if (event.type == sf::Event::KeyPressed)
@@ -85,32 +83,78 @@ void Play::playGame(){
 
                             Menu menu;
                             menu.openMainMenuWindow();
-
 						}
                     }
         }
+      
+        //  Check for click of all 13 player cards
+        
+        setPlayerCardsPos(players[playerInd].cards);
+        if (roundStarted){
+            // std::cout<<gameCards.size()<<std::endl;
+            if (turnInd == playerInd){
+                selectLegalCards(players[turnInd].cards, gameCards);
+                for (auto i=players[playerInd].cards.begin(); i<players[playerInd].cards.end(); ++i){
+                    // i->display();
+                    if (checkForMouseTrigger(i->sprite, GAME_WINDOW) && i->playable){
+                        gameCards.push_back(*i);
+                        players[playerInd].cards.erase(i);
+                        turnInd = (turnInd+1)%4;
+                        // i->display();
+                    }
+                }
+                // std::cout<<std::endl;
+            }
+            
+            else{
+                selectLegalCards(players[turnInd].cards,gameCards);
+                int indx = players[turnInd].getCardIndex(gameCards);
+                gameCards.push_back(players[turnInd].cards[indx]);
+                players[turnInd].cards.erase(players[turnInd].cards.begin() + indx);
+                turnInd = (turnInd+1)%4;
+            }
 
+            if (gameCards.size() >= 4){
+                winInd = (getWinner() + winInd)%4;
+                players[winInd].round_score += 1;
+                turnInd = winInd;
+                // for(int i=0;i<4;i++){
+                //     gameCards[i].display();}
+                // std::cout<<winInd<<"\n";
+                gameCards.clear();
+
+            }
+        } 
+
+        else{
+            
+            if (turnInd == playerInd){
+                bid = showBidWindow();
+                if (bid != -1){
+                    players[playerInd].bids[round] = bid;
+                    roundStarted = true;
+                    turnInd = (turnInd+1)%4;}}
+            else{
+                turnInd = (turnInd+1)%4;}
+        }
         GAME_WINDOW.clear();
+        
+        // drawPlayersCards(GAME_WINDOW, players[playerInd].cards );
+        int size =  players[playerInd].cards.size();
+        // std::cout<<size<<std::endl;
+        setPlayerCardsPos(players[playerInd].cards);
         GAME_WINDOW.draw(tableBackground);
+        for(auto i=players[playerInd].cards.begin();i!=players[playerInd].cards.end();++i)
+        {
+            GAME_WINDOW.draw(i->sprite);
+            // i->display();
+        }
 
-        displayPlayerCards(GAME_WINDOW, p1);
-        // GAME_WINDOW.draw(p1.cards[0].sprite); 
         GAME_WINDOW.draw(cardBack[0]);
         GAME_WINDOW.draw(cardBack[1]);
         GAME_WINDOW.draw(cardBack[2]);
-
-        //  Check for click of all 13 player cards
-        for (int i = 0; i<13; i++){
-            checkToMoveCardForward(p1.cards[i].sprite, GAME_WINDOW);
-        }
-
-        GAME_WINDOW.display();   
-        if (p1.bidWindowShown){
-            showBidWindow(p1.bidWindowShown);
-        } 
-
+        GAME_WINDOW.display(); 
     }
-
 }
 
 //  Function to return sprite for back of card sprite
@@ -144,26 +188,36 @@ void Play::showCardBacks()
 void Play::loadPlayerCard(std::vector<Card>& card, sf::Texture& texture)
 {
     //load texture for the 13 cards
+    // std::cout<<card.size()<<std::endl;
     for(auto i=card.begin();i!=card.end();++i){
             i->loadTexture(texture);
         }
 }
 
 //  Show player cards
-void Play::displayPlayerCards(sf::RenderWindow &window, Player& p_1){
-    int size = p_1.cards.size();
-    for (int i=0; i < size; i++)
+void Play::setPlayerCardsPos( std::vector<Card> &pCards){
+    int size = pCards.size();
+    for(auto i=pCards.begin();i!=pCards.end();++i)
     {
-        sf::Sprite &p_sprite= p_1.cards[i].sprite; 
         //  define postion for player cards
-        p_sprite.setPosition(sf::Vector2f(GAME_WIDTH/2-((size-1)*55+112)/2 + 55*(i), GAME_HEIGHT-150));
-        window.draw(p_sprite); 
+        if (i->playable)
+            i->sprite.setPosition(sf::Vector2f(GAME_WIDTH/2-((size-1)*55+112)/2 + 55*(i-pCards.begin()), GAME_HEIGHT-180));
+        else
+            i->sprite.setPosition(sf::Vector2f(GAME_WIDTH/2-((size-1)*55+112)/2 + 55*(i-pCards.begin()), GAME_HEIGHT-150));
     }
+}
 
+void drawPlayersCards(sf::RenderWindow &window, std::vector<Card> &pCards){
+    
+    for(auto i=pCards.begin();i!=pCards.end();++i)
+    {
+        window.draw(i->sprite);
+        
+        }
 }
 
 //returns the index of winning card
-int Play::getWinner(std::vector<Card> & gameCards){
+int Play::getWinner(){
     int maxInd = 0;
 
     for(auto i = gameCards.begin();i<gameCards.end();++i ){
@@ -185,22 +239,22 @@ void Play::selectLegalCards (std::vector<Card> & playerCards, std::vector<Card> 
         }
     }
     else {
-        Card maxCard = gameCards[0];
+        std::vector<Card>::iterator maxCard = gameCards.begin();
         int gameSuit = gameCards[0].getSuit();
         bool setFlag = false;
         bool containSpade = false;
         for(auto i = gameCards.begin();i<gameCards.end();++i ){
+            i->playable = false;
             if (i->getSuit()==3 && gameSuit!=3){
                 containSpade = true;
             }
-            if (maxCard.isSmlThan(*i) && (i->getSuit()!=3|| gameSuit==3) ){
-                maxCard = *i;
+            if (maxCard->isSmlThan(*i) && (i->getSuit()!=3|| gameSuit==3) ){
+                maxCard = i;
             }
-
         }
 
         for(auto i=playerCards.begin();i<playerCards.end();++i){
-            if(maxCard.isSmlThan(*i) && (i->getSuit()==gameSuit)){
+            if(maxCard->isSmlThan(*i) && (i->getSuit()==gameSuit)){
                 i->playable = true;
                 setFlag = true;
             }
@@ -243,6 +297,7 @@ bool Play::checkForMouseTrigger(sf::Sprite &av_Sprite, sf::RenderWindow &av_Wind
     int mouseX = sf::Mouse::getPosition().x;
     int mouseY = sf::Mouse::getPosition().y;
     sf::Vector2i windowPosition = av_Window.getPosition();
+    // std::cout<<windowPosition.x<<" "<<windowPosition.y<<std::endl;
 
     if(mouseX > av_Sprite.getPosition().x + windowPosition.x && mouseX < ( av_Sprite.getPosition().x + av_Sprite.getGlobalBounds().width + windowPosition.x - 20)
         && mouseY > av_Sprite.getPosition().y + windowPosition.y + 30  && mouseY < ( av_Sprite.getPosition().y + av_Sprite.getGlobalBounds().height + windowPosition.y + 30) )
@@ -257,7 +312,7 @@ bool Play::checkForMouseTrigger(sf::Sprite &av_Sprite, sf::RenderWindow &av_Wind
 }
 
 //  Small Bid window
-void Play::showBidWindow(bool &bidWinShown){
+int Play::showBidWindow(){
     sf::RenderWindow BID_WINDOW;
 
     BID_WINDOW.create(sf::VideoMode(200, 200), "Call Your Bid");
@@ -274,15 +329,16 @@ void Play::showBidWindow(bool &bidWinShown){
                 {
                     int num = event.text.unicode - 48;  // get ascii for digit entered and convert again to num
                     //  To open window just once in game loop
-                    bidWinShown = false;
                     if (num>0 && num<=8){
                         std::cout << "Bid entered = " << num;   //  This is the user input bid no
                         //  Close bid window only for bid range 1 - 8
                         BID_WINDOW.close();
+                        return num;
                     }
                 }
         }
     }
+    return -1;
 }
 
 //  Function to move sprite (but doesn't at the moment )

@@ -58,6 +58,7 @@ void Play::playGame(){
 
     loadPlayerCard(players[playerInd].cards,cardFrontTexture);
 
+
     sf::RenderWindow GAME_WINDOW;
     GAME_WINDOW.create(sf::VideoMode(GAME_WIDTH, GAME_HEIGHT), "Play Call Break");
     turnInd = rand()%4;
@@ -137,22 +138,36 @@ void Play::playGame(){
             else{
                 turnInd = (turnInd+1)%4;}
         }
-        GAME_WINDOW.clear();
+        loadPlayerCard(gameCards,cardFrontTexture);
+        // GAME_WINDOW.clear();
         
         // drawPlayersCards(GAME_WINDOW, players[playerInd].cards );
         int size =  players[playerInd].cards.size();
         // std::cout<<size<<std::endl;
         setPlayerCardsPos(players[playerInd].cards);
+        showBotCard(gameCards, cardFrontTexture);
         GAME_WINDOW.draw(tableBackground);
+
+    
+        //  Bot cards show
+        for(auto i=gameCards.begin();i!=gameCards.end();++i)
+        {
+            GAME_WINDOW.draw(i->sprite);
+            // i->display();
+        }
+
+        //  Player cards show
         for(auto i=players[playerInd].cards.begin();i!=players[playerInd].cards.end();++i)
         {
             GAME_WINDOW.draw(i->sprite);
             // i->display();
         }
 
+
         GAME_WINDOW.draw(cardBack[0]);
         GAME_WINDOW.draw(cardBack[1]);
         GAME_WINDOW.draw(cardBack[2]);
+
         GAME_WINDOW.display(); 
     }
 }
@@ -192,6 +207,32 @@ void Play::loadPlayerCard(std::vector<Card>& card, sf::Texture& texture)
     for(auto i=card.begin();i!=card.end();++i){
             i->loadTexture(texture);
         }
+}
+
+void Play::showBotCard(std::vector<Card>& b_card, sf::Texture& texture)
+{
+    // loadPlayerCard(b_card, texture);
+    int num = 0;
+    for (auto i = b_card.begin(); i != b_card.end(); ++i)
+    {
+        if (num == 0)
+        {
+            i->sprite.setRotation(90);
+            i->sprite.setPosition(sf::Vector2f(130 + 100, GAME_HEIGHT/2 - Card::eachCardHeight/2));
+        }
+        if (num == 1)
+        {
+            i->sprite.setRotation(180);
+            i->sprite.setPosition(sf::Vector2f(GAME_WIDTH/2 - Card::eachCardWidth/2, 100));
+        }
+        if (num == 2)
+        {
+            i->sprite.setRotation(-90);
+            i->sprite.setPosition(sf::Vector2f(GAME_WIDTH - 40, GAME_HEIGHT/2 - Card::eachCardHeight/2));
+        }
+        num++;
+    }
+
 }
 
 //  Show player cards

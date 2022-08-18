@@ -10,30 +10,7 @@ bool compare(Card & c1, Card & c2){
 }
 
 Play::Play():playerInd(0){
-    std::vector<Card> allCards; //It is a vector for all 52 cards
-    std::vector<Card> cardn;
-//     std::vector<Card>::iterator f;
-
-    // Initializing all the cards and adding to allCards
-    for(int i=0;i<4;i++){
-        for(int j = 0;j<13;j++){
-            allCards.push_back(Card(i,j));
-        }
-    }
-
-    std::random_shuffle(allCards.begin(),allCards.end());
-    
-	if (!cardFrontTexture.loadFromFile("src\\Images\\Cards\\cardFront\\all_cards.png"))
-	{
-		std::cout << "Error loading card image.";
-	}
-    srand(time(0));
-    for(int i=0;i<4;i++){
-        cardn.assign(allCards.begin()+13*i,allCards.begin()+13*(i+1));
-        sort(cardn.begin(),cardn.end(),compare);
-        players.push_back(Player(cardn,i==playerInd));
-    }
-    loadPlayerCard(players[playerInd].cards,cardFrontTexture);
+    distCards(true);
 }
 
 
@@ -76,8 +53,9 @@ void Play::playGame(){
     std::ostringstream ss;
 
     turnInd = rand()%4;
-    bool roundStarted = false;
+    int roundState = 0;
     int round = 0;
+    int roundNum = 0;
     int bid, winInd = turnInd;
     while (GAME_WINDOW.isOpen())
     {
@@ -109,18 +87,24 @@ void Play::playGame(){
         
         GAME_WINDOW.draw(tableBackground);
         setPlayerCardsPos(players[playerInd].cards, turnInd == playerInd);
-        if (roundStarted){
+        // Enters here if bidding is complete and players are throwing cards
+        if (roundState == 1){
 
             timeElapsed += clock.restart();
+            
             if (timeElapsed > turnDelay){
                 timeElapsed -= turnDelay;
-
                 if (gameCards.size() >= 4){
                     winInd = (getWinner() + winInd)%4;
                     players[winInd].round_score += 1;
                     turnInd = winInd;
                     gameCards.clear();
-
+                    roundNum += 1;
+                }
+                if (roundNum > 12){
+                    roundState = 2;
+                    roundNum = 0;
+                    continue;
                 }
 
                 if (turnInd == playerInd){
@@ -135,7 +119,6 @@ void Play::playGame(){
                             break;
                         }
                     }
-
                 }
                 
                 else{
@@ -150,8 +133,8 @@ void Play::playGame(){
                 
             }
         } 
-
-        else{
+        // Enters here if bidding hasn't compoleted
+        else if(roundState == 0){
             
             if (turnInd == playerInd){
                 bid = showBidWindow();
@@ -164,7 +147,24 @@ void Play::playGame(){
                 }
 
             if(turnInd == winInd){
-                roundStarted = true;
+                roundState = 1;
+            }
+        }
+
+        // Enters here after each 13 rounds are completed
+        else if(roundState == 2){
+            for(int i=0;i<4;i++){
+                players[i].calcScore(round);
+                std::cout<<"Player "<<i<<" score: "<<players[i].scores[round]<<std::endl;
+            }
+            std::cout<<"\n";
+            distCards(false);
+            round += 1;
+            roundState = 0;
+            turnInd = rand()%4;
+            winInd = turnInd;
+            if(round>=5){
+                roundState = 3;
             }
         }
         GAME_WINDOW.clear();
@@ -422,7 +422,7 @@ int Play::showBidWindow(){
                     int num = event.text.unicode - 48;  // get ascii for digit entered and convert again to num
                     //  To open window just once in game loop
                     if (num>0 && num<=8){
-                        std::cout << "Bid entered = " << num;   //  This is the user input bid no
+                        std::cout << "Bid entered = " << num<<"\n";   //  This is the user input bid no
                         //  Close bid window only for bid range 1 - 8
                         BID_WINDOW.close();
                         return num;
@@ -444,4 +444,38 @@ void Play::checkToMoveCardForward(sf::Sprite &card_sprite, sf::RenderWindow &win
             std::cout << "Card clicked" <<std::endl;
             // card_sprite.move(sf::Vector2f(400, 400));
         }
+}
+
+void Play::distCards(bool createPlayer){
+    std::vector<Card> allCards; //It is a vector for all 52 cards
+    std::vector<Card> cardn;
+//     std::vector<Card>::iterator f;
+
+    // Initializing all the cards and adding to allCards
+    for(int i=0;i<4;i++){
+        for(int j = 0;j<13;j++){
+            allCards.push_back(Card(i,j));
+        }
+    }
+
+    std::random_shuffle(allCards.begin(),allCards.end());
+    
+	if (!cardFrontTexture.loadFromFile("src\\Images\\Cards\\cardFront\\all_cards.png"))
+	{
+		std::cout << "Error loading card image.";
+	}
+    srand(time(0));
+    if (createPlayer){
+        players.clear();}
+    for(int i=0;i<4;i++){
+        cardn.assign(allCards.begin()+13*i,allCards.begin()+13*(i+1));
+        sort(cardn.begin(),cardn.end(),compare);
+        if (createPlayer){
+            players.push_back(Player(cardn,i==playerInd));}
+        else{
+            players[i].cards.assign(cardn.begin(),cardn.end());
+            }
+        players[i].round_score = 0;
+    }
+    loadPlayerCard(players[playerInd].cards,cardFrontTexture);
 }

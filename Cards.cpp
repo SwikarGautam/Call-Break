@@ -40,6 +40,7 @@ int Card::getSuit(){
     return suit;
 }
 
+
 void Card::display(){
     std::cout<<"suit: "<<suit<<" rank: "<<rank<<std::endl;
 }
@@ -52,3 +53,4 @@ void Card::operator=(const Card & c1){
     suit = c1.suit;
     rank = c1.rank;
 }
+

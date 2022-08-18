@@ -42,7 +42,9 @@ class Play{
         //  Decide to move player card forward
         void checkToMoveCardForward(sf::Sprite &card_sprite, sf::RenderWindow &window);
 
-        void setGameCards(int startInd);   
+        void setGameCards(int startInd);  
+
+        void distCards(bool createPlayer); 
 
 };
 

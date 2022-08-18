@@ -12,10 +12,10 @@ class Player{
         bool isUser;
         int bids[5] = {0,0,0,0,0};
         int round_score = 0;
-        float scores[5] = {-99,-99,-99,-99,-99};
+        float scores[5] = {0,0,0,0,0};
         int setUserSelectedCard();
         int selectedCardIndex;
         bool hasSelected = false;
         void setBid(int round);
-        
+        void calcScore(int round);
 };

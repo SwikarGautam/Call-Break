@@ -23,3 +23,17 @@ void Player::setBid(int round){
           bids[round] = 3;
      }
 }
+
+void Player::calcScore(int round){
+     if (round_score > bids[round]){
+          scores[round] = bids[round] + (round_score - bids[round]) * 0.1;
+     }
+
+     else if(round_score == bids[round])
+          scores[round] = round_score;
+
+     else{
+          scores[round] = - bids[round];
+     }
+}
+

@@ -1,5 +1,6 @@
 #include "Play.hpp"
 #include "Menu.hpp"
+#include "Text.hpp"
 #include <bits/stdc++.h>
 
 // Used for sorting Cards
@@ -171,6 +172,17 @@ void Play::playGame(){
         GAME_WINDOW.draw(cardBack[1]);
         GAME_WINDOW.draw(cardBack[2]);
 
+        Text text[4];
+
+        text[0].loadText("2/2", 41, GAME_HEIGHT/2 - 20);
+        text[1].loadText("2/4", GAME_WIDTH/2,  100);
+        text[2].loadText("2/4", GAME_WIDTH - 70, GAME_HEIGHT/2 - 20);
+        text[3].loadText("2/6", GAME_WIDTH/2, GAME_HEIGHT - 200);
+
+        for (int i=0 ; i<4; i++)
+        {
+            text[i].renderText(GAME_WINDOW);
+        }
         GAME_WINDOW.display(); 
     }
 }
@@ -197,9 +209,9 @@ sf::Sprite Play::getCardBackSprite(sf::Texture & texture, int X_POS, int Y_POS, 
 void Play::showCardBacks()
 {
         //  Get Sprite with specified arguments
-    cardBack[0] = getCardBackSprite(cardBackTexture, GAME_WIDTH/2 - Card::eachCardWidth/2, 0, false);
-    cardBack[1] = getCardBackSprite(cardBackTexture, 130, GAME_HEIGHT/2 - Card::eachCardHeight/2, true);
-    cardBack[2] = getCardBackSprite(cardBackTexture, GAME_WIDTH, GAME_HEIGHT/2 - Card::eachCardHeight/2, true);
+    cardBack[0] = getCardBackSprite(cardBackTexture, GAME_WIDTH/2 - 20, 0, false);
+    cardBack[1] = getCardBackSprite(cardBackTexture, 100, GAME_HEIGHT/2 - Card::eachCardHeight/2, true);
+    cardBack[2] = getCardBackSprite(cardBackTexture, GAME_WIDTH-5, GAME_HEIGHT/2 - Card::eachCardHeight/2, true);
 
 }
 

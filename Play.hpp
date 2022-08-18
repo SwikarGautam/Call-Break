@@ -4,6 +4,7 @@
 #include <vector>
 #include <SFML/Graphics.hpp>
 #include "Cards.hpp"
+#include  "Text.hpp"
 #include "Player.hpp"
 
 class Play{

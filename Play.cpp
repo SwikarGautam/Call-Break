@@ -2,6 +2,7 @@
 #include "Menu.hpp"
 #include "Text.hpp"
 #include <bits/stdc++.h>
+#include <sstream>
 
 // Used for sorting Cards
 bool compare(Card & c1, Card & c2){
@@ -13,13 +14,13 @@ Play::Play():playerInd(0){
     std::vector<Card> cardn;
 //     std::vector<Card>::iterator f;
 
-//     // Initializing all the cards and adding to allCards
+    // Initializing all the cards and adding to allCards
     for(int i=0;i<4;i++){
         for(int j = 0;j<13;j++){
             allCards.push_back(Card(i,j));
         }
     }
-//     // shuffling cards (doesn't work) currently
+
     std::random_shuffle(allCards.begin(),allCards.end());
     
 	if (!cardFrontTexture.loadFromFile("src\\Images\\Cards\\cardFront\\all_cards.png"))
@@ -27,7 +28,6 @@ Play::Play():playerInd(0){
 		std::cout << "Error loading card image.";
 	}
     srand(time(0));
-    // loadPlayerCard(allCards,texture);
     for(int i=0;i<4;i++){
         cardn.assign(allCards.begin()+13*i,allCards.begin()+13*(i+1));
         sort(cardn.begin(),cardn.end(),compare);
@@ -67,6 +67,14 @@ void Play::playGame(){
     sf::Clock clock;
     sf::Time timeElapsed = sf::Time::Zero;
 
+    Text text[4];
+    
+        text[0].loadText("0/0", GAME_WIDTH/2, GAME_HEIGHT - 200);
+        text[1].loadText("0/0", 41, GAME_HEIGHT/2 - 20);
+        text[2].loadText("0/0", GAME_WIDTH/2,  100);
+        text[3].loadText("0/0", GAME_WIDTH - 70, GAME_HEIGHT/2 - 20);
+    std::ostringstream ss;
+
     turnInd = rand()%4;
     bool roundStarted = false;
     int round = 0;
@@ -100,7 +108,7 @@ void Play::playGame(){
         GAME_WINDOW.clear();
         
         GAME_WINDOW.draw(tableBackground);
-        setPlayerCardsPos(players[playerInd].cards);
+        setPlayerCardsPos(players[playerInd].cards, turnInd == playerInd);
         if (roundStarted){
 
             timeElapsed += clock.restart();
@@ -149,36 +157,47 @@ void Play::playGame(){
                 bid = showBidWindow();
                 if (bid != -1){
                     players[playerInd].bids[round] = bid;
-                    roundStarted = true;
                     turnInd = (turnInd+1)%4;}}
             else{
-                turnInd = (turnInd+1)%4;}
+                players[turnInd].setBid(round);
+                turnInd = (turnInd+1)%4;
+                }
+
+            if(turnInd == winInd){
+                roundStarted = true;
+            }
         }
         GAME_WINDOW.clear();
         
-        setPlayerCardsPos(players[playerInd].cards);
+        setPlayerCardsPos(players[playerInd].cards, turnInd==playerInd);
         setGameCards(winInd);
         //  Set bot card position
         
         GAME_WINDOW.draw(tableBackground);
 
         //  Bot cards show
-        drawPlayersCards(GAME_WINDOW, gameCards);
+        drawCards(GAME_WINDOW, gameCards);
 
         //  Player cards show
-        drawPlayersCards(GAME_WINDOW, players[playerInd].cards );
+        drawCards(GAME_WINDOW, players[playerInd].cards );
 
 
         GAME_WINDOW.draw(cardBack[0]);
         GAME_WINDOW.draw(cardBack[1]);
         GAME_WINDOW.draw(cardBack[2]);
 
-        Text text[4];
-
-        text[0].loadText("2/2", 41, GAME_HEIGHT/2 - 20);
-        text[1].loadText("2/4", GAME_WIDTH/2,  100);
-        text[2].loadText("2/4", GAME_WIDTH - 70, GAME_HEIGHT/2 - 20);
-        text[3].loadText("2/6", GAME_WIDTH/2, GAME_HEIGHT - 200);
+        ss.str("");
+        ss<<players[0].round_score<<"/"<<players[0].bids[round];
+        text[0].setText(ss.str());
+        ss.str("");
+        ss<<players[1].round_score<<"/"<<players[1].bids[round];
+        text[1].setText(ss.str());
+        ss.str("");
+        ss<<players[2].round_score<<"/"<<players[2].bids[round];
+        text[2].setText(ss.str());
+        ss.str("");
+        ss<<players[3].round_score<<"/"<<players[3].bids[round];
+        text[3].setText(ss.str());
 
         for (int i=0 ; i<4; i++)
         {
@@ -200,7 +219,7 @@ sf::Sprite Play::getCardBackSprite(sf::Texture & texture, int X_POS, int Y_POS, 
     //  Specify position to blit on screen in vector form
     backSprite.setPosition(sf::Vector2f(X_POS , Y_POS));
 
-    backSprite.setTextureRect(sf::IntRect(0, 0,140,190)); 
+    backSprite.setTextureRect(sf::IntRect(0,0,140,190)); 
 
     //  Scale card back img    
     backSprite.scale(sf::Vector2f(0.5, 0.5));
@@ -229,7 +248,7 @@ void Play::setGameCards(int startInd)
 {
     // loadPlayerCard(b_card, texture);
     
-
+    // std::cout<<startInd;
     for (auto i = gameCards.begin(); i != gameCards.end(); ++i)
     {   
         if (startInd == 0){
@@ -257,24 +276,24 @@ void Play::setGameCards(int startInd)
 }
 
 //  Show player cards
-void Play::setPlayerCardsPos( std::vector<Card> &pCards){
+void Play::setPlayerCardsPos( std::vector<Card> &pCards, bool playerTurn){
     int size = pCards.size();
     for(auto i=pCards.begin();i!=pCards.end();++i)
     {
         //  define postion for player cards
-        if (i->playable)
+        if (i->playable && playerTurn)
             i->sprite.setPosition(sf::Vector2f(GAME_WIDTH/2-((size-1)*55+112)/2 + 55*(i-pCards.begin()), GAME_HEIGHT-180));
         else
             i->sprite.setPosition(sf::Vector2f(GAME_WIDTH/2-((size-1)*55+112)/2 + 55*(i-pCards.begin()), GAME_HEIGHT-150));
     }
 }
 
-void Play::drawPlayersCards(sf::RenderWindow &window, std::vector<Card> &pCards){
+void Play::drawCards(sf::RenderWindow &window, std::vector<Card> &pCards){
     
     for(auto i=pCards.begin();i<pCards.end();++i)
     {
         window.draw(i->sprite);
-        }
+    }
 }
 
 //returns the index of winning card

@@ -16,6 +16,7 @@ class Text
 
         void loadText(std::string score, float x, float y);
 		void renderText(sf::RenderWindow& window);
+		void setText(std::string);
         
 
 	private:

@@ -36,3 +36,7 @@ void Text::renderText(sf::RenderWindow& window){
 	window.draw(anyText);
 
 }
+
+void Text::setText(std::string str){
+	anyText.setString(str);
+}

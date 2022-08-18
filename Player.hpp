@@ -10,8 +10,8 @@ class Player{
         std::vector<Card> cards;
         int getCardIndex(const std::vector<Card> gameCards);
         bool isUser;
-        int bids[5] = {-99,-99,-99,-99,-99};
-        int round_score;
+        int bids[5] = {0,0,0,0,0};
+        int round_score = 0;
         float scores[5] = {-99,-99,-99,-99,-99};
         int setUserSelectedCard();
         int selectedCardIndex;

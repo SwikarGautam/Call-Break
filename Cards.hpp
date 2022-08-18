@@ -15,9 +15,9 @@ class Card{
         static const int eachCardHeight = 190;
         bool playable=false;
         Card(int s,int r);
+        Card(const Card & c1);
         void loadTexture(sf::Texture & texture);
-        void loadTexture(sf::Texture & texture, bool flag);
-
+        // void loadTexture(sf::Texture & texture,bool scale);
         int getSuit();
         bool isSmlThan(const Card & c1);
         // Card(Card & c1);

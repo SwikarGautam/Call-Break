@@ -39,15 +39,9 @@ Credits::Credits()
 
 
 void Credits::renderCredits(sf::RenderWindow& window){
-	//	Draw text into window
-	window.draw(creditsText);
-
-	//	Draw ESC at top into window
-	window.draw(escapeText);
-	
 
 	//	Credits Text motion Setting
-	creditsText.move(0, 0.1f);
+	creditsText.move(0, 0.3f);
 	if (creditsText.getPosition().y > (600))	//	Manually assigned 600
 	{
 		creditsText.setPosition(800 / 2 - 80, 0);	//	Manually assigned 800
@@ -62,7 +56,7 @@ void Credits::openCreditsWindow(){
 
 	//	Create new Credits window
 	CREDITS_WINDOW.create(sf::VideoMode(900, 600), "Credits");
-
+	CREDITS_WINDOW.setFramerateLimit(60);
 	//	Load texture for credits background
 	sf::Texture texture;
 	if (!texture.loadFromFile("src/Images/creditsBackground.jpg"))
@@ -70,6 +64,10 @@ void Credits::openCreditsWindow(){
 		std::cout << "Error loading menu background image.";
 	}
 	sf::Sprite creditsBackground(texture);
+
+	sf::Clock clock;
+	sf::Time timeSinceLastUpdate = sf::Time::Zero;
+	const sf::Time TimeConstant = sf::seconds(1.f/60.f);
 
 	//	Game loop
 	while (CREDITS_WINDOW.isOpen())
@@ -95,9 +93,14 @@ void Credits::openCreditsWindow(){
 		}
 
 		CREDITS_WINDOW.draw(creditsBackground);
+		CREDITS_WINDOW.draw(creditsText);
+		CREDITS_WINDOW.draw(escapeText);
 
 		//	Render text
-		renderCredits(CREDITS_WINDOW);
+		timeSinceLastUpdate += clock.restart();
+		while (timeSinceLastUpdate > TimeConstant){
+			timeSinceLastUpdate -= TimeConstant;
+			renderCredits(CREDITS_WINDOW);}
 
 		//	end of current frame
 		CREDITS_WINDOW.display();

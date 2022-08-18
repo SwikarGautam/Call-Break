@@ -8,7 +8,7 @@ bool compare(Card & c1, Card & c2){
     return c1.getN() > c2.getN();
 }
 
-Play::Play(){
+Play::Play():playerInd(0){
     std::vector<Card> allCards; //It is a vector for all 52 cards
     std::vector<Card> cardn;
 //     std::vector<Card>::iterator f;
@@ -27,14 +27,13 @@ Play::Play(){
 		std::cout << "Error loading card image.";
 	}
     srand(time(0));
-    playerInd = rand()%4;
     // loadPlayerCard(allCards,texture);
     for(int i=0;i<4;i++){
         cardn.assign(allCards.begin()+13*i,allCards.begin()+13*(i+1));
         sort(cardn.begin(),cardn.end(),compare);
         players.push_back(Player(cardn,i==playerInd));
     }
-    // loadPlayerCard(players[playerInd].cards,cardFrontTexture);
+    loadPlayerCard(players[playerInd].cards,cardFrontTexture);
 }
 
 
@@ -57,11 +56,17 @@ void Play::playGame(){
     }
     sf::Sprite tableBackground(table_texture);
 
-    loadPlayerCard(players[playerInd].cards,cardFrontTexture);
+    // loadPlayerCard(players[playerInd].cards,cardFrontTexture);
 
 
     sf::RenderWindow GAME_WINDOW;
     GAME_WINDOW.create(sf::VideoMode(GAME_WIDTH, GAME_HEIGHT), "Play Call Break");
+    GAME_WINDOW.setFramerateLimit(60);
+
+    const sf::Time turnDelay = sf::seconds(1.f/5.f);
+    sf::Clock clock;
+    sf::Time timeElapsed = sf::Time::Zero;
+
     turnInd = rand()%4;
     bool roundStarted = false;
     int round = 0;
@@ -92,41 +97,49 @@ void Play::playGame(){
         }
 
         //  Check for click of all 13 player cards
+        GAME_WINDOW.clear();
         
+        GAME_WINDOW.draw(tableBackground);
         setPlayerCardsPos(players[playerInd].cards);
         if (roundStarted){
-            // std::cout<<gameCards.size()<<std::endl;
-            if (turnInd == playerInd){
-                selectLegalCards(players[turnInd].cards, gameCards);
-                for (auto i=players[playerInd].cards.begin(); i<players[playerInd].cards.end(); ++i){
-                    // i->display();
-                    if (checkForMouseTrigger(i->sprite, GAME_WINDOW) && i->playable){
-                        gameCards.push_back(*i);
-                        players[playerInd].cards.erase(i);
-                        turnInd = (turnInd+1)%4;
-                        // i->display();
-                    }
+
+            timeElapsed += clock.restart();
+            if (timeElapsed > turnDelay){
+                timeElapsed -= turnDelay;
+
+                if (gameCards.size() >= 4){
+                    winInd = (getWinner() + winInd)%4;
+                    players[winInd].round_score += 1;
+                    turnInd = winInd;
+                    gameCards.clear();
+
                 }
-                // std::cout<<std::endl;
-            }
-            
-            else{
-                selectLegalCards(players[turnInd].cards,gameCards);
-                int indx = players[turnInd].getCardIndex(gameCards);
-                gameCards.push_back(players[turnInd].cards[indx]);
-                players[turnInd].cards.erase(players[turnInd].cards.begin() + indx);
-                turnInd = (turnInd+1)%4;
-            }
 
-            if (gameCards.size() >= 4){
-                winInd = (getWinner() + winInd)%4;
-                players[winInd].round_score += 1;
-                turnInd = winInd;
-                // for(int i=0;i<4;i++){
-                //     gameCards[i].display();}
-                // std::cout<<winInd<<"\n";
-                gameCards.clear();
+                if (turnInd == playerInd){
+                    selectLegalCards(players[turnInd].cards, gameCards);
+                    for (auto i=players[playerInd].cards.begin(); i<players[playerInd].cards.end(); ++i){
+                        
+                        if (checkForMouseTrigger(i->sprite, GAME_WINDOW) && i->playable){
+                            gameCards.push_back(*i);
+                            players[playerInd].cards.erase(i);
+                            turnInd = (turnInd+1)%4;
+                            loadPlayerCard(players[playerInd].cards, cardFrontTexture);
+                            break;
+                        }
+                    }
 
+                }
+                
+                else{
+                    selectLegalCards(players[turnInd].cards,gameCards);
+                    int indx = players[turnInd].getCardIndex(gameCards);
+                    gameCards.push_back(players[turnInd].cards[indx]);
+                    players[turnInd].cards.erase(players[turnInd].cards.begin() + indx);
+                    turnInd = (turnInd+1)%4;
+                }
+                    
+                loadPlayerCard(gameCards,cardFrontTexture);
+                
             }
         } 
 
@@ -143,29 +156,17 @@ void Play::playGame(){
         }
         GAME_WINDOW.clear();
         
-        // drawPlayersCards(GAME_WINDOW, players[playerInd].cards );
-        int size =  players[playerInd].cards.size();
-        // std::cout<<size<<std::endl;
         setPlayerCardsPos(players[playerInd].cards);
-
+        setGameCards(winInd);
         //  Set bot card position
-        setBotCardPos(gameCards, cardFrontTexture);
+        
         GAME_WINDOW.draw(tableBackground);
 
-    
         //  Bot cards show
-        for(auto i=gameCards.begin();i!=gameCards.end();++i)
-        {
-            GAME_WINDOW.draw(i->sprite);
-            // i->display();
-        }
+        drawPlayersCards(GAME_WINDOW, gameCards);
 
         //  Player cards show
-        for(auto i=players[playerInd].cards.begin();i!=players[playerInd].cards.end();++i)
-        {
-            GAME_WINDOW.draw(i->sprite);
-            // i->display();
-        }
+        drawPlayersCards(GAME_WINDOW, players[playerInd].cards );
 
 
         GAME_WINDOW.draw(cardBack[0]);
@@ -218,37 +219,39 @@ void Play::showCardBacks()
 void Play::loadPlayerCard(std::vector<Card>& card, sf::Texture& texture)
 {
     //load texture for the 13 cards
-    // std::cout<<card.size()<<std::endl;
     for(auto i=card.begin();i!=card.end();++i){
             i->loadTexture(texture);
         }
 }
 
 //  Set Bot Card Position
-void Play::setBotCardPos(std::vector<Card>& b_card, sf::Texture& texture)
+void Play::setGameCards(int startInd)
 {
     // loadPlayerCard(b_card, texture);
-    int num = 0;
+    
 
-    for (auto i = b_card.begin(); i != b_card.end(); ++i)
-    {
-        i->loadTexture(texture);
-        if (num == 0)
+    for (auto i = gameCards.begin(); i != gameCards.end(); ++i)
+    {   
+        if (startInd == 0){
+            i->sprite.setPosition(sf::Vector2f(GAME_WIDTH/2 - 50 , GAME_HEIGHT/2 - 50));
+        }
+
+        else if (startInd == 1)
         {   
             i->sprite.setRotation(90);
             i->sprite.setPosition(sf::Vector2f(GAME_WIDTH/2 , GAME_HEIGHT/2 - Card::eachCardHeight/2));
         }
-        if (num == 1)
+        else if ( startInd == 2)
         {
             i->sprite.setRotation(-180);
-            i->sprite.setPosition(sf::Vector2f(GAME_WIDTH/2 , GAME_HEIGHT/2 - 50));
+            i->sprite.setPosition(sf::Vector2f(GAME_WIDTH/2 + 75 , GAME_HEIGHT/2 - 25));
         }
-        if (num == 2)
+        else if ( startInd == 3)
         {
             i->sprite.setRotation(-90);
-            i->sprite.setPosition(sf::Vector2f(GAME_WIDTH/2 -50, GAME_HEIGHT/2 ));
+            i->sprite.setPosition(sf::Vector2f(GAME_WIDTH/2 , GAME_HEIGHT/2 ));
         }
-        num++;
+        startInd = (startInd+1)%4;
     }
 
 }
@@ -266,12 +269,11 @@ void Play::setPlayerCardsPos( std::vector<Card> &pCards){
     }
 }
 
-void drawPlayersCards(sf::RenderWindow &window, std::vector<Card> &pCards){
+void Play::drawPlayersCards(sf::RenderWindow &window, std::vector<Card> &pCards){
     
-    for(auto i=pCards.begin();i!=pCards.end();++i)
+    for(auto i=pCards.begin();i<pCards.end();++i)
     {
         window.draw(i->sprite);
-        
         }
 }
 
@@ -375,6 +377,7 @@ int Play::showBidWindow(){
     sf::RenderWindow BID_WINDOW;
 
     BID_WINDOW.create(sf::VideoMode(430, 210), "Call Your Bid", sf::Style::None);
+    BID_WINDOW.setFramerateLimit(30);
 
     	//	Load texture for background image and load img
 	sf::Texture texture;

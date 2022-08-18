@@ -17,10 +17,12 @@ bool Card::isSmlThan(const Card &c1){
 
 
 Card::Card(int s, int r):suit(s), rank(r){
+    sprite.scale(sf::Vector2f(0.8, 0.8));
 }
 
-// Card::Card( Card & c1):suit(c1.suit), rank(c1.rank){
-// }
+Card::Card(const Card & c1):suit(c1.suit), rank(c1.rank){
+    sprite = c1.sprite;
+}
 
 void Card::loadTexture(sf::Texture & texture){
     sprite.setTexture(texture);
@@ -30,7 +32,6 @@ void Card::loadTexture(sf::Texture & texture){
     int y = n / 9;
     sprite.setTextureRect(sf::IntRect(eachCardWidth*x,eachCardHeight*y, eachCardWidth, eachCardHeight)); 
     sprite.setPosition(sf::Vector2f(300, 400));
-    sprite.scale(sf::Vector2f(0.8, 0.8));
 }
 
 

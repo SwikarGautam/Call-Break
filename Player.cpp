@@ -8,13 +8,14 @@ Player::Player(std::vector<Card> vect, bool user){
      
 }
 
-int Player::getCardIndex(const std::vector<Card>){
+ int Player::getCardIndex(const std::vector<Card>){
+     int ind = 0;
      for(int i=0; i<cards.size();i++){
           if (cards[i].playable){
-               return i;
+               ind = i;
           }
      }
-     return -1;
+     return ind;
 }
 
 void Player::setBid(int round){

@@ -13,7 +13,7 @@ class Play{
         sf::Texture cardBackTexture;
         int GAME_WIDTH = 900;
         int GAME_HEIGHT = 600;
-        int playerInd;
+        const int playerInd;
         int turnInd=0;
         std::vector<Player> players;
         std::vector<Card> gameCards;
@@ -26,6 +26,7 @@ class Play{
     sf::Sprite getCardBackSprite(sf::Texture & texture, int X_POS, int Y_POS, bool rotateFlag);
     void showCardBacks();
     void loadPlayerCard(std::vector<Card>& card1, sf::Texture& texture);
+
 
     //  Display Player Cards at bottom
     void setPlayerCardsPos( std::vector<Card> &pCards);
@@ -42,10 +43,7 @@ class Play{
     //  Decide to move player card forward
     void checkToMoveCardForward(sf::Sprite &card_sprite, sf::RenderWindow &window);
 
-    void drawGameCards(int startInd);   
-
-    void setBotCardPos(std::vector<Card>& card, sf::Texture& texture);
-
+    void setGameCards(int startInd);   
 
 };
 

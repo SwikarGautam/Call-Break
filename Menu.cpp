@@ -77,6 +77,7 @@ void Menu::openMainMenuWindow(){
 
 	//	Main Menu window stuff
 	MENU_WINDOW.create(sf::VideoMode(MENU_WIDTH, MENU_HEIGHT), "Call Break");
+	MENU_WINDOW.setFramerateLimit(60);
 
 
 	//	Load texture for background image and load img

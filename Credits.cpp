@@ -7,7 +7,7 @@
 Credits::Credits()
 {
 	//	Specify positions for info-text
-	float credits_X = 800/2 - 80;	//	Manually set 800
+	float credits_X = 950/2 - 80;	//	Manually set 800
 
 	//	Load
 	if (!font.loadFromFile("src/Font/StreamerDemo.otf"))
@@ -44,7 +44,7 @@ void Credits::renderCredits(sf::RenderWindow& window){
 	creditsText.move(0, 0.3f);
 	if (creditsText.getPosition().y > (600))	//	Manually assigned 600
 	{
-		creditsText.setPosition(800 / 2 - 80, 0);	//	Manually assigned 800
+		creditsText.setPosition(950 / 2 - 80, 0);	//	Manually assigned 800
 	}
 
 }
@@ -55,7 +55,7 @@ void Credits::openCreditsWindow(){
 	sf::RenderWindow CREDITS_WINDOW;
 
 	//	Create new Credits window
-	CREDITS_WINDOW.create(sf::VideoMode(900, 600), "Credits");
+	CREDITS_WINDOW.create(sf::VideoMode(950, 600), "Credits");
 	CREDITS_WINDOW.setFramerateLimit(60);
 	//	Load texture for credits background
 	sf::Texture texture;

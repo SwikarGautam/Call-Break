@@ -11,7 +11,7 @@ class Play{
     private:
         sf::Sprite cardBack[3];
         sf::Texture cardBackTexture;
-        int GAME_WIDTH = 900;
+        int GAME_WIDTH = 950;
         int GAME_HEIGHT = 600;
         const int playerInd;
         int turnInd=0;

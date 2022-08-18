@@ -35,7 +35,7 @@ class Menu
 	private:
 		//	Menu window	
 		sf::RenderWindow MENU_WINDOW;
-		int MENU_WIDTH = 900;
+		int MENU_WIDTH = 950;
 		int MENU_HEIGHT = 600;
 		int selectedLabelIndex;
 		sf::Font font;

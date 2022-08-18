@@ -17,7 +17,7 @@ bool Card::isSmlThan(const Card &c1){
 
 
 Card::Card(int s, int r):suit(s), rank(r){
-    sprite.scale(sf::Vector2f(0.8, 0.8));
+    sprite.scale(sf::Vector2f(0.7, 0.7));
 }
 
 Card::Card(const Card & c1):suit(c1.suit), rank(c1.rank){

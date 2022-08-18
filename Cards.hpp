@@ -16,6 +16,8 @@ class Card{
         bool playable=false;
         Card(int s,int r);
         void loadTexture(sf::Texture & texture);
+        void loadTexture(sf::Texture & texture, bool flag);
+
         int getSuit();
         bool isSmlThan(const Card & c1);
         // Card(Card & c1);

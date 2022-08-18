@@ -67,6 +67,8 @@ void Play::playGame(){
     int bid, winInd = turnInd;
     while (GAME_WINDOW.isOpen())
     {
+        //  Load Bot Cards
+        loadPlayerCard(gameCards,cardFrontTexture);
 		sf::Event event;
 		while (GAME_WINDOW.pollEvent(event))
 		{
@@ -87,7 +89,7 @@ void Play::playGame(){
 						}
                     }
         }
-      
+
         //  Check for click of all 13 player cards
         
         setPlayerCardsPos(players[playerInd].cards);
@@ -138,14 +140,15 @@ void Play::playGame(){
             else{
                 turnInd = (turnInd+1)%4;}
         }
-        loadPlayerCard(gameCards,cardFrontTexture);
-        // GAME_WINDOW.clear();
+        GAME_WINDOW.clear();
         
         // drawPlayersCards(GAME_WINDOW, players[playerInd].cards );
         int size =  players[playerInd].cards.size();
         // std::cout<<size<<std::endl;
         setPlayerCardsPos(players[playerInd].cards);
-        showBotCard(gameCards, cardFrontTexture);
+
+        //  Set bot card position
+        setBotCardPos(gameCards, cardFrontTexture);
         GAME_WINDOW.draw(tableBackground);
 
     
@@ -187,7 +190,7 @@ sf::Sprite Play::getCardBackSprite(sf::Texture & texture, int X_POS, int Y_POS, 
     backSprite.setTextureRect(sf::IntRect(0, 0,140,190)); 
 
     //  Scale card back img    
-    backSprite.scale(sf::Vector2f(0.6, 0.6));
+    backSprite.scale(sf::Vector2f(0.5, 0.5));
     return backSprite;
 }
 
@@ -209,26 +212,29 @@ void Play::loadPlayerCard(std::vector<Card>& card, sf::Texture& texture)
         }
 }
 
-void Play::showBotCard(std::vector<Card>& b_card, sf::Texture& texture)
+//  Set Bot Card Position
+void Play::setBotCardPos(std::vector<Card>& b_card, sf::Texture& texture)
 {
     // loadPlayerCard(b_card, texture);
     int num = 0;
+
     for (auto i = b_card.begin(); i != b_card.end(); ++i)
     {
+        i->loadTexture(texture);
         if (num == 0)
-        {
+        {   
             i->sprite.setRotation(90);
-            i->sprite.setPosition(sf::Vector2f(130 + 100, GAME_HEIGHT/2 - Card::eachCardHeight/2));
+            i->sprite.setPosition(sf::Vector2f(GAME_WIDTH/2 , GAME_HEIGHT/2 - Card::eachCardHeight/2));
         }
         if (num == 1)
         {
-            i->sprite.setRotation(180);
-            i->sprite.setPosition(sf::Vector2f(GAME_WIDTH/2 - Card::eachCardWidth/2, 100));
+            i->sprite.setRotation(-180);
+            i->sprite.setPosition(sf::Vector2f(GAME_WIDTH/2 , GAME_HEIGHT/2 - 50));
         }
         if (num == 2)
         {
             i->sprite.setRotation(-90);
-            i->sprite.setPosition(sf::Vector2f(GAME_WIDTH - 40, GAME_HEIGHT/2 - Card::eachCardHeight/2));
+            i->sprite.setPosition(sf::Vector2f(GAME_WIDTH/2 -50, GAME_HEIGHT/2 ));
         }
         num++;
     }

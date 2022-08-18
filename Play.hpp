@@ -43,7 +43,7 @@ class Play{
 
     void drawGameCards(int startInd);   
 
-    void showBotCard(std::vector<Card>& card, sf::Texture& texture);
+    void setBotCardPos(std::vector<Card>& card, sf::Texture& texture);
 
 
 };

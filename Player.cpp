@@ -8,7 +8,7 @@ Player::Player(std::vector<Card> vect, bool user){
      
 }
 
- int Player::getCardIndex(const std::vector<Card>){
+int Player::getCardIndex(const std::vector<Card>){
      for(int i=0; i<cards.size();i++){
           if (cards[i].playable){
                return i;

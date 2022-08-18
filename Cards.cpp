@@ -33,6 +33,8 @@ void Card::loadTexture(sf::Texture & texture){
     sprite.scale(sf::Vector2f(0.8, 0.8));
 }
 
+
+
 int Card::getSuit(){
     return suit;
 }

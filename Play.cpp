@@ -10,17 +10,24 @@ bool compare(Card & c1, Card & c2){
 }
 
 Play::Play():playerInd(0){
-    distCards(true);
-}
 
+    if (!cardFrontTexture.loadFromFile("src\\Images\\Cards\\cardFront\\all_cards.png"))
+	{
+		std::cout << "Error loading card image.";
+	}
+    cardFrontTexture.setSmooth(true);
 
-void Play::playGame(){ 
-
-    //  Load texture for card back
+     //  Load texture for card back
 	if (!cardBackTexture.loadFromFile("src\\Images\\Cards\\cardBack\\cardBack_red1.png"))
 	{
 		std::cout << "Error loading cardBack image.";
 	}
+    distCards(true);
+}
+
+
+void Play::playGame(sf::RenderWindow & GAME_WINDOW){ 
+
 
     //  Array with 3 elements containing cardBack at 3 positions
     showCardBacks();
@@ -36,13 +43,22 @@ void Play::playGame(){
     // loadPlayerCard(players[playerInd].cards,cardFrontTexture);
 
 
-    sf::RenderWindow GAME_WINDOW;
-    GAME_WINDOW.create(sf::VideoMode(GAME_WIDTH, GAME_HEIGHT), "Play Call Break");
-    GAME_WINDOW.setFramerateLimit(60);
+    // sf::RenderWindow GAME_WINDOW;
+    // GAME_WINDOW.create(sf::VideoMode(GAME_WIDTH, GAME_HEIGHT), "Play Call Break");
+    // GAME_WINDOW.setFramerateLimit(60);
 
     const sf::Time turnDelay = sf::seconds(1.f/5.f);
     sf::Clock clock;
     sf::Time timeElapsed = sf::Time::Zero;
+
+    sf::Texture bidBackTexture;
+	if (!bidBackTexture.loadFromFile("src/Images/bidWindowBackground.jpg"))
+	{
+		std::cout << "Error loading bid window background image.";
+	}
+	sf::Sprite bidWinBackground(bidBackTexture);
+	bidWinBackground.scale(sf::Vector2f(0.8, 0.8));
+    bidWinBackground.setPosition(260,165);
 
     Text text[4];
     
@@ -53,10 +69,12 @@ void Play::playGame(){
     std::ostringstream ss;
 
     turnInd = rand()%4;
-    int roundState = 0;
+    int gameState = 0;
     int round = 0;
     int roundNum = 0;
-    int bid, winInd = turnInd;
+    int bid = -1;
+    int winInd = turnInd;
+    std::cout<<gameState;
     while (GAME_WINDOW.isOpen())
     {
         //  Load Bot Cards
@@ -74,12 +92,21 @@ void Play::playGame(){
 						if (event.key.code == sf::Keyboard::Escape)
                         {
 							//	Escape key pressed closes credits window
-							GAME_WINDOW.close();
-
-                            Menu menu;
-                            menu.openMainMenuWindow();
+                            return ;
 						}
                     }
+                if (event.type == sf::Event::TextEntered && gameState==0)
+                {
+                    bid = event.text.unicode - 48;  // get ascii for digit entered and convert again to num
+                    //  To open window just once in game loop
+                    if (bid>0 && bid<=8){
+                        std::cout << "Bid entered = " << bid <<"\n";   //  This is the user input bid no
+                        //  Close bid window only for bid range 1 - 8
+                    }
+                    else{
+                        bid = -1;
+                    }
+                }
         }
 
         //  Check for click of all 13 player cards
@@ -88,7 +115,8 @@ void Play::playGame(){
         GAME_WINDOW.draw(tableBackground);
         setPlayerCardsPos(players[playerInd].cards, turnInd == playerInd);
         // Enters here if bidding is complete and players are throwing cards
-        if (roundState == 1){
+        // std::cout<<gameState;
+        if (gameState == 1){
 
             timeElapsed += clock.restart();
             
@@ -102,7 +130,7 @@ void Play::playGame(){
                     roundNum += 1;
                 }
                 if (roundNum > 12){
-                    roundState = 2;
+                    gameState = 2;
                     roundNum = 0;
                     continue;
                 }
@@ -127,6 +155,9 @@ void Play::playGame(){
                     gameCards.push_back(players[turnInd].cards[indx]);
                     players[turnInd].cards.erase(players[turnInd].cards.begin() + indx);
                     turnInd = (turnInd+1)%4;
+                    if (turnInd == playerInd){
+                        selectLegalCards(players[turnInd].cards, gameCards);
+                    }
                 }
                     
                 loadPlayerCard(gameCards,cardFrontTexture);
@@ -134,25 +165,31 @@ void Play::playGame(){
             }
         } 
         // Enters here if bidding hasn't compoleted
-        else if(roundState == 0){
+        else if(gameState == 0){
             
             if (turnInd == playerInd){
-                bid = showBidWindow();
+                // bid = showBidWindow();
+                // std::cout<<bid;
                 if (bid != -1){
                     players[playerInd].bids[round] = bid;
-                    turnInd = (turnInd+1)%4;}}
+                    turnInd = (turnInd+1)%4;
+                    
+                    }
+                }
+
             else{
                 players[turnInd].setBid(round);
                 turnInd = (turnInd+1)%4;
                 }
 
-            if(turnInd == winInd){
-                roundState = 1;
+            if(turnInd == winInd && bid != -1){
+                gameState = 1;
+                bid = -1;
             }
         }
 
         // Enters here after each 13 rounds are completed
-        else if(roundState == 2){
+        else if(gameState == 2){
             for(int i=0;i<4;i++){
                 players[i].calcScore(round);
                 std::cout<<"Player "<<i<<" score: "<<players[i].scores[round]<<std::endl;
@@ -160,11 +197,11 @@ void Play::playGame(){
             std::cout<<"\n";
             distCards(false);
             round += 1;
-            roundState = 0;
+            gameState = 0;
             turnInd = rand()%4;
             winInd = turnInd;
             if(round>=5){
-                roundState = 3;
+                gameState = 3;
             }
         }
         GAME_WINDOW.clear();
@@ -173,7 +210,12 @@ void Play::playGame(){
         setGameCards(winInd);
         //  Set bot card position
         
+        
         GAME_WINDOW.draw(tableBackground);
+
+        if (gameState == 0 && turnInd==playerInd){
+            GAME_WINDOW.draw(bidWinBackground);
+        }
 
         //  Bot cards show
         drawCards(GAME_WINDOW, gameCards);
@@ -209,8 +251,11 @@ void Play::playGame(){
 
 //  Function to return sprite for back of card sprite
 
-sf::Sprite Play::getCardBackSprite(sf::Texture & texture, int X_POS, int Y_POS, bool rotateFlag){
-    sf::Sprite backSprite(texture);
+sf::RectangleShape Play::getCardBackSprite(const sf::Texture & texture, int X_POS, int Y_POS, bool rotateFlag){
+    // sf::RectangleShape backSprite(texture);
+    sf::RectangleShape backSprite(sf::Vector2f(140.f,190.f));
+    backSprite.setTexture(&texture);
+
 
     //  Rotate sprite if flag set to true
     if (rotateFlag){
@@ -263,12 +308,12 @@ void Play::setGameCards(int startInd)
         else if ( startInd == 2)
         {
             i->sprite.setRotation(-180);
-            i->sprite.setPosition(sf::Vector2f(GAME_WIDTH/2 + 75 , GAME_HEIGHT/2 - 25));
+            i->sprite.setPosition(sf::Vector2f(GAME_WIDTH/2 + 65 , GAME_HEIGHT/2 - 25));
         }
         else if ( startInd == 3)
         {
             i->sprite.setRotation(-90);
-            i->sprite.setPosition(sf::Vector2f(GAME_WIDTH/2 , GAME_HEIGHT/2 ));
+            i->sprite.setPosition(sf::Vector2f(GAME_WIDTH/2 -10 , GAME_HEIGHT/2 ));
         }
         startInd = (startInd+1)%4;
     }
@@ -391,50 +436,6 @@ bool Play::checkForMouseTrigger(sf::Sprite &av_Sprite, sf::RenderWindow &av_Wind
     return false;
 }
 
-//  Small Bid window
-int Play::showBidWindow(){
-    sf::RenderWindow BID_WINDOW;
-
-    BID_WINDOW.create(sf::VideoMode(430, 210), "Call Your Bid", sf::Style::None);
-    BID_WINDOW.setFramerateLimit(30);
-
-    	//	Load texture for background image and load img
-	sf::Texture texture;
-	if (!texture.loadFromFile("src/Images/bidWindowBackground.jpg"))
-	{
-		std::cout << "Error loading bid window background image.";
-	}
-	sf::Sprite bidWinBackground(texture);
-	bidWinBackground.scale(sf::Vector2f(0.8, 0.8));
-
-
-    while (BID_WINDOW.isOpen())
-    {
-		sf::Event event;
-		while (BID_WINDOW.pollEvent(event))
-		{
-				if (event.type == sf::Event::Closed)
-				{
-					BID_WINDOW.close();
-				}
-                if (event.type == sf::Event::TextEntered)
-                {
-                    int num = event.text.unicode - 48;  // get ascii for digit entered and convert again to num
-                    //  To open window just once in game loop
-                    if (num>0 && num<=8){
-                        std::cout << "Bid entered = " << num<<"\n";   //  This is the user input bid no
-                        //  Close bid window only for bid range 1 - 8
-                        BID_WINDOW.close();
-                        return num;
-                    }
-                }
-        }
-        BID_WINDOW.clear();
-        BID_WINDOW.draw(bidWinBackground);
-        BID_WINDOW.display();
-    }
-    return -1;
-}
 
 //  Function to move sprite (but doesn't at the moment )
 void Play::checkToMoveCardForward(sf::Sprite &card_sprite, sf::RenderWindow &window){
@@ -460,10 +461,6 @@ void Play::distCards(bool createPlayer){
 
     std::random_shuffle(allCards.begin(),allCards.end());
     
-	if (!cardFrontTexture.loadFromFile("src\\Images\\Cards\\cardFront\\all_cards.png"))
-	{
-		std::cout << "Error loading card image.";
-	}
     srand(time(0));
     if (createPlayer){
         players.clear();}

@@ -17,7 +17,7 @@ class Credits
 		//	Constructor
 		Credits();
 		void renderCredits(sf::RenderWindow& window);
-		void openCreditsWindow();
+		void openCreditsWindow(sf::RenderWindow& window);
 
 
 	private:

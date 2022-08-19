@@ -49,14 +49,14 @@ void Credits::renderCredits(sf::RenderWindow& window){
 
 }
 
-void Credits::openCreditsWindow(){
+void Credits::openCreditsWindow(sf::RenderWindow & CREDITS_WINDOW){
 		//	Show credits when 'Enter' pressed in Credits
 
-	sf::RenderWindow CREDITS_WINDOW;
+	// sf::RenderWindow CREDITS_WINDOW;
 
 	//	Create new Credits window
-	CREDITS_WINDOW.create(sf::VideoMode(950, 600), "Credits");
-	CREDITS_WINDOW.setFramerateLimit(60);
+	// CREDITS_WINDOW.create(sf::VideoMode(950, 600), "Credits");
+	// CREDITS_WINDOW.setFramerateLimit(60);
 	//	Load texture for credits background
 	sf::Texture texture;
 	if (!texture.loadFromFile("src/Images/creditsBackground.jpg"))
@@ -85,9 +85,10 @@ void Credits::openCreditsWindow(){
 				if (event.key.code == sf::Keyboard::Escape)
 				{
 					//	Escape key pressed closes credits window
-					CREDITS_WINDOW.close();
-					Menu menu;
-					menu.openMainMenuWindow();
+					// CREDITS_WINDOW.close();
+					// Menu menu;
+					// menu.openMainMenuWindow();
+					return ;
 				}
 			}
 		}

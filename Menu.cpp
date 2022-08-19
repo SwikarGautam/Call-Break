@@ -129,17 +129,17 @@ void Menu::openMainMenuWindow(){
 
 						//	Main Game
 						//	First close Main Menu
-						closeMainMenuWindow();
+						// closeMainMenuWindow();
 						Play play;
-						play.playGame();
+						play.playGame(MENU_WINDOW);
 					}
 					if (getPressedLabel() == CREDITS || clickedMenuValue(mouseClickPos) == CREDITS)	//	CREDITS -> 1
 					{
 						//	Show credits when 'Enter' pressed in Credits
 						//	First close Main Menu
-						closeMainMenuWindow();
+						// closeMainMenuWindow();
 						Credits credits;
-						credits.openCreditsWindow();
+						credits.openCreditsWindow(MENU_WINDOW);
 					}
 					if (getPressedLabel() == QUIT || clickedMenuValue(mouseClickPos) == QUIT)
 					{

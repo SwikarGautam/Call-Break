@@ -9,7 +9,7 @@
 
 class Play{
     private:
-        sf::Sprite cardBack[3];
+        sf::RectangleShape cardBack[3];
         sf::Texture cardBackTexture;
         int GAME_WIDTH = 950;
         int GAME_HEIGHT = 600;
@@ -22,8 +22,8 @@ class Play{
         Play();
         sf::Texture cardFrontTexture;
         bool bidWindowShown = true;
-        void playGame();
-        sf::Sprite getCardBackSprite(sf::Texture & texture, int X_POS, int Y_POS, bool rotateFlag);
+        void playGame(sf::RenderWindow & GAME_WINDOW);
+        sf::RectangleShape getCardBackSprite(const sf::Texture & texture, int X_POS, int Y_POS, bool rotateFlag);
         void showCardBacks();
         void loadPlayerCard(std::vector<Card>& card1, sf::Texture& texture);
 

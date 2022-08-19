@@ -20,7 +20,7 @@ Player::Player(std::vector<Card> vect, bool user){
 
 void Player::setBid(int round){
      if (!isUser){
-          bids[round] = 3;
+          bids[round] = rand()%5 + 1;
      }
 }
 

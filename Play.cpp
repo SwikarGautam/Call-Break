@@ -41,16 +41,11 @@ void Play::playGame(sf::RenderWindow & GAME_WINDOW){
     }
     sf::Sprite tableBackground(table_texture);
 
-    // loadPlayerCard(players[playerInd].cards,cardFrontTexture);
 
-
-    // sf::RenderWindow GAME_WINDOW;
-    // GAME_WINDOW.create(sf::VideoMode(GAME_WIDTH, GAME_HEIGHT), "Play Call Break");
-    // GAME_WINDOW.setFramerateLimit(60);
-
-    const sf::Time turnDelay = sf::seconds(1.f/5.f);
+    const sf::Time turnDelay = sf::seconds(0.7);
     sf::Clock clock;
     sf::Time timeElapsed = sf::Time::Zero;
+    sf::Time timeDelta = sf::Time::Zero;
 
     sf::Texture bidBackTexture;
 	if (!bidBackTexture.loadFromFile("src/Images/bidWindowBackground.jpg"))
@@ -75,7 +70,7 @@ void Play::playGame(sf::RenderWindow & GAME_WINDOW){
     int roundNum = 0;
     int bid = -1;
     int winInd = turnInd;
-    std::cout<<gameState;
+    
     while (GAME_WINDOW.isOpen())
     {
         //  Load Bot Cards
@@ -101,7 +96,7 @@ void Play::playGame(sf::RenderWindow & GAME_WINDOW){
                     bid = event.text.unicode - 48;  // get ascii for digit entered and convert again to num
                     //  To open window just once in game loop
                     if (bid>0 && bid<=8){
-                        std::cout << "Bid entered = " << bid <<"\n";   //  This is the user input bid no
+                        // std::cout << "Bid entered = " << bid <<"\n";   //  This is the user input bid no
                         //  Close bid window only for bid range 1 - 8
                     }
                     else{
@@ -116,13 +111,26 @@ void Play::playGame(sf::RenderWindow & GAME_WINDOW){
         GAME_WINDOW.draw(tableBackground);
         setPlayerCardsPos(players[playerInd].cards, turnInd == playerInd);
         // Enters here if bidding is complete and players are throwing cards
-        // std::cout<<gameState;
         if (gameState == 1){
 
             timeElapsed += clock.restart();
+
+            if(gameCards.size()>=4){
+                // to pause for some after after all players have thrown a card
+                timeDelta  = sf::seconds(5);  
+                gameCards[getWinner()].sprite.setOutlineThickness(-7);
+                gameCards[getWinner()].sprite.setOutlineColor(sf::Color(0,255,0));
+            }
+
+            else if (turnInd==playerInd){
+                timeDelta = sf::seconds(1.f/10.f) - turnDelay;
+            }
             
-            if (timeElapsed > turnDelay){
-                timeElapsed -= turnDelay;
+            if (timeElapsed > turnDelay + timeDelta){
+                // std::cout<<timeElapsed.asSeconds()<<"\n";
+                timeElapsed -= turnDelay + timeDelta;
+                timeDelta = sf::Time::Zero;
+
                 if (gameCards.size() >= 4){
                     winInd = (getWinner() + winInd)%4;
                     players[winInd].round_score += 1;
@@ -130,6 +138,7 @@ void Play::playGame(sf::RenderWindow & GAME_WINDOW){
                     gameCards.clear();
                     roundNum += 1;
                 }
+
                 if (roundNum > 12){
                     gameState = 2;
                     roundNum = 0;
@@ -169,8 +178,7 @@ void Play::playGame(sf::RenderWindow & GAME_WINDOW){
         else if(gameState == 0){
             
             if (turnInd == playerInd){
-                // bid = showBidWindow();
-                // std::cout<<bid;
+                
                 if (bid != -1){
                     players[playerInd].bids[round] = bid;
                     turnInd = (turnInd+1)%4;
@@ -193,11 +201,11 @@ void Play::playGame(sf::RenderWindow & GAME_WINDOW){
         else if(gameState == 2){
             for(int i=0;i<4;i++){
                 players[i].calcScore(round);
-                std::cout<<"Player "<<i<<" score: "<<players[i].scores[round]<<std::endl;
+                // std::cout<<"Player "<<i<<" score: "<<players[i].scores[round]<<std::endl;
             }
             Score score;
             score.showScoreWin(players, round);
-            std::cout<<"\n";
+            // std::cout<<"\n";
             distCards(false);
             round += 1;
             gameState = 0;
@@ -209,7 +217,7 @@ void Play::playGame(sf::RenderWindow & GAME_WINDOW){
         }
         GAME_WINDOW.clear();
         
-        setPlayerCardsPos(players[playerInd].cards, turnInd==playerInd);
+        setPlayerCardsPos(players[playerInd].cards, turnInd==playerInd && gameCards.size()!=4);
         setGameCards(winInd);
         //  Set bot card position
         
@@ -271,6 +279,7 @@ sf::RectangleShape Play::getCardBackSprite(const sf::Texture & texture, int X_PO
 
     //  Scale card back img    
     backSprite.scale(sf::Vector2f(0.5, 0.5));
+    backSprite.setOutlineThickness(-7);
     return backSprite;
 }
 
@@ -294,29 +303,27 @@ void Play::loadPlayerCard(std::vector<Card>& card, sf::Texture& texture)
 //  Set Bot Card Position
 void Play::setGameCards(int startInd)
 {
-    // loadPlayerCard(b_card, texture);
     
-    // std::cout<<startInd;
     for (auto i = gameCards.begin(); i != gameCards.end(); ++i)
     {   
         if (startInd == 0){
-            i->sprite.setPosition(sf::Vector2f(GAME_WIDTH/2 - 50 , GAME_HEIGHT/2 - 50));
+            i->sprite.setPosition(sf::Vector2f(GAME_WIDTH/2 - 0.7 *Card::eachCardWidth/2 + 10, GAME_HEIGHT/2 - 50));
         }
 
         else if (startInd == 1)
         {   
             i->sprite.setRotation(90);
-            i->sprite.setPosition(sf::Vector2f(GAME_WIDTH/2 , GAME_HEIGHT/2 - Card::eachCardHeight/2));
+            i->sprite.setPosition(sf::Vector2f(GAME_WIDTH/2 + 10 , GAME_HEIGHT/2 - Card::eachCardHeight/2));
         }
         else if ( startInd == 2)
         {
             i->sprite.setRotation(-180);
-            i->sprite.setPosition(sf::Vector2f(GAME_WIDTH/2 + 65 , GAME_HEIGHT/2 - 25));
+            i->sprite.setPosition(sf::Vector2f(GAME_WIDTH/2 + 0.7*Card::eachCardWidth/2 +10, GAME_HEIGHT/2 - 25));
         }
         else if ( startInd == 3)
         {
             i->sprite.setRotation(-90);
-            i->sprite.setPosition(sf::Vector2f(GAME_WIDTH/2 -10 , GAME_HEIGHT/2 ));
+            i->sprite.setPosition(sf::Vector2f(GAME_WIDTH/2 +5 , GAME_HEIGHT/2 +3 ));
         }
         startInd = (startInd+1)%4;
     }
@@ -419,13 +426,13 @@ void Play::selectLegalCards (std::vector<Card> & playerCards, std::vector<Card> 
 }
 
 //  Check if sprite is clicked through mouse
-bool Play::checkForMouseTrigger(sf::Sprite &av_Sprite, sf::RenderWindow &av_Window)
+bool Play::checkForMouseTrigger(sf::RectangleShape &av_Sprite, sf::RenderWindow &av_Window)
 {
 
     int mouseX = sf::Mouse::getPosition().x;
     int mouseY = sf::Mouse::getPosition().y;
     sf::Vector2i windowPosition = av_Window.getPosition();
-    // std::cout<<windowPosition.x<<" "<<windowPosition.y<<std::endl;
+    
 
     if(mouseX > av_Sprite.getPosition().x + windowPosition.x && mouseX < ( av_Sprite.getPosition().x + av_Sprite.getGlobalBounds().width + windowPosition.x - 20)
         && mouseY > av_Sprite.getPosition().y + windowPosition.y + 30  && mouseY < ( av_Sprite.getPosition().y + av_Sprite.getGlobalBounds().height + windowPosition.y + 30) )
@@ -440,20 +447,19 @@ bool Play::checkForMouseTrigger(sf::Sprite &av_Sprite, sf::RenderWindow &av_Wind
 }
 
 
-//  Function to move sprite (but doesn't at the moment )
-void Play::checkToMoveCardForward(sf::Sprite &card_sprite, sf::RenderWindow &window){
+//  Function to move sprite
+void Play::checkToMoveCardForward(sf::RectangleShape &card_sprite, sf::RenderWindow &window){
         bool mouseClick = checkForMouseTrigger(card_sprite, window);
         if(mouseClick)
         {
             std::cout << "Card clicked" <<std::endl;
-            // card_sprite.move(sf::Vector2f(400, 400));
         }
 }
 
 void Play::distCards(bool createPlayer){
     std::vector<Card> allCards; //It is a vector for all 52 cards
     std::vector<Card> cardn;
-//     std::vector<Card>::iterator f;
+
 
     // Initializing all the cards and adding to allCards
     for(int i=0;i<4;i++){

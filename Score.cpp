@@ -11,12 +11,16 @@ int Score::showScoreWin(std::vector<Player> players, int currentRound){
 
     		// Load texture for background image and load img
 	sf::Texture texture;
-	if (!texture.loadFromFile("src/Images/scoreBackground.jpg"))
+	if (!texture.loadFromFile("src/Images/woodBack.png"))
 	{
 		std::cout << "Error loading score window background image.";
 	}
+	// if (!texture.loadFromFile("src/Images/scoreBackground.jpg"))
+	// {
+	// 	std::cout << "Error loading score window background image.";
+	// }
 	sf::Sprite scoreBackground(texture);
-	scoreBackground.scale(sf::Vector2f(0.4, 0.4));
+	// scoreBackground.scale(sf::Vector2f(0.4, 0.4));
 
 
     while (SCORE_WINDOW.isOpen())
@@ -53,23 +57,23 @@ int Score::showScoreWin(std::vector<Player> players, int currentRound){
         Text titleText;
         Text text1[5][5];
         Text infoText;
-        int initX = 50;
-        int initY = 50;
-        titleText.loadText("", initX - 40, initY - 40, 20, sf::Color::Black, true);
-        
-        headText.loadText("", initX, initY, 18, sf::Color::Black, false);
+        float initX = 50;
+        float initY = 40;
 
-        initY = 150;
+        titleText.loadText("", initX - 40, initY - 35, 20, sf::Color::Black, true);
+        headText.loadText("", initX, initY, 18, sf::Color::Black, false);
+        
+
 
         //  Info text
-        infoText.loadText("", SCORE_WIDTH/2 - 100, SCORE_HEIGHT - 40, 18, sf::Color::Black, true);
+        infoText.loadText("", SCORE_WIDTH/2 - 75, SCORE_HEIGHT - 25, 18, sf::Color::Black, true);
         for (int i=0; i<=4; ++i)
         {
-        initY += i * 50;
-        for (int j = 0; j<=4; ++j)
-        {
-        text1[i][j].loadText("", initX + 95 * (j), initY, 18, sf::Color::Black, false);
-        }
+            initY = float(50 + (i+1) * 40);
+            for (int j = 0; j<=4; ++j)
+            {
+            text1[i][j].loadText("", initX + 95 * (j), initY, 18, sf::Color::Black, false);
+            }
         }
         SCORE_WINDOW.clear();
         SCORE_WINDOW.draw(scoreBackground);
@@ -79,7 +83,7 @@ int Score::showScoreWin(std::vector<Player> players, int currentRound){
         titleText.setText(ss.str());
         ss.str("");
 
-        ss<<"\n\nS.N\t\t You\t\tBot-I\t\tBot-II\t\tBot-III";
+        ss<<"S.N\t\t You\t\tBot-I\t\tBot-II\t\tBot-III";
         headText.setText(ss.str());
         ss.str("");
 

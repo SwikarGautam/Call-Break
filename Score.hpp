@@ -9,7 +9,7 @@ class Score
 {
     private:
         int SCORE_WIDTH = 500;
-        int SCORE_HEIGHT = 400;
+        int SCORE_HEIGHT = 333;
     public:
         int showScoreWin(std::vector<Player> players,int currentRound );
 };

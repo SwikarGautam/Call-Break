@@ -117,7 +117,7 @@ void Play::playGame(sf::RenderWindow & GAME_WINDOW){
 
             if(gameCards.size()>=4){
                 // to pause for some after after all players have thrown a card
-                timeDelta  = sf::seconds(5);  
+                timeDelta  = sf::seconds(0.7);  
                 gameCards[getWinner()].sprite.setOutlineThickness(-7);
                 gameCards[getWinner()].sprite.setOutlineColor(sf::Color(0,255,0));
             }

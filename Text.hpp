@@ -15,6 +15,8 @@ class Text
 	public:
 
         void loadText(std::string score, float x, float y);
+        void loadText(std::string score, float x, float y, int size, sf::Color color, bool isStylish);
+
 		void renderText(sf::RenderWindow& window);
 		void setText(std::string);
         

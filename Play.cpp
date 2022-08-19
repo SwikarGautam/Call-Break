@@ -1,6 +1,7 @@
 #include "Play.hpp"
 #include "Menu.hpp"
 #include "Text.hpp"
+#include "Score.hpp"
 #include <bits/stdc++.h>
 #include <sstream>
 
@@ -194,6 +195,8 @@ void Play::playGame(sf::RenderWindow & GAME_WINDOW){
                 players[i].calcScore(round);
                 std::cout<<"Player "<<i<<" score: "<<players[i].scores[round]<<std::endl;
             }
+            Score score;
+            score.showScoreWin(players, round);
             std::cout<<"\n";
             distCards(false);
             round += 1;

@@ -42,6 +42,7 @@ void Play::playGame(sf::RenderWindow & GAME_WINDOW){
     sf::Sprite tableBackground(table_texture);
 
 
+    // const sf::Time turnDelay = sf::seconds(0.1);
     const sf::Time turnDelay = sf::seconds(0.7);
     sf::Clock clock;
     sf::Time timeElapsed = sf::Time::Zero;
@@ -116,8 +117,9 @@ void Play::playGame(sf::RenderWindow & GAME_WINDOW){
             timeElapsed += clock.restart();
 
             if(gameCards.size()>=4){
-                // to pause for some after after all players have thrown a card
+                // to pause for some after  all players have thrown a card
                 timeDelta  = sf::seconds(0.7);  
+                // timeDelta  = sf::seconds(0.1);  
                 gameCards[getWinner()].sprite.setOutlineThickness(-7);
                 gameCards[getWinner()].sprite.setOutlineColor(sf::Color(0,255,0));
             }
@@ -174,7 +176,7 @@ void Play::playGame(sf::RenderWindow & GAME_WINDOW){
                 
             }
         } 
-        // Enters here if bidding hasn't compoleted
+        // Enters here if bidding hasn't completed
         else if(gameState == 0){
             
             if (turnInd == playerInd){
@@ -205,7 +207,7 @@ void Play::playGame(sf::RenderWindow & GAME_WINDOW){
             }
             Score score;
             score.showScoreWin(players, round);
-            // std::cout<<"\n";
+            clock.restart();
             distCards(false);
             round += 1;
             gameState = 0;

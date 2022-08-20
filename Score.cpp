@@ -55,7 +55,8 @@ int Score::showScoreWin(std::vector<Player> players, int currentRound){
         }
         Text headText;
         Text titleText;
-        Text text1[5][5];
+        Text text1[6][5];
+        float total_scores[4] = {0,0,0,0};
         Text infoText;
         float initX = 50;
         float initY = 40;
@@ -67,7 +68,7 @@ int Score::showScoreWin(std::vector<Player> players, int currentRound){
 
         //  Info text
         infoText.loadText("", SCORE_WIDTH/2 - 75, SCORE_HEIGHT - 25, 18, sf::Color::Black, true);
-        for (int i=0; i<=4; ++i)
+        for (int i=0; i<=currentRound; ++i)
         {
             initY = float(50 + (i+1) * 40);
             for (int j = 0; j<=4; ++j)
@@ -75,6 +76,12 @@ int Score::showScoreWin(std::vector<Player> players, int currentRound){
             text1[i][j].loadText("", initX + 95 * (j), initY, 18, sf::Color::Black, false);
             }
         }
+
+        for (int j = 0; j<=4; ++j)
+            {
+            text1[5][j].loadText("", initX + 95 * (j), initY+50, 18, sf::Color::Black, false);
+            }
+        
         SCORE_WINDOW.clear();
         SCORE_WINDOW.draw(scoreBackground);
 
@@ -98,17 +105,30 @@ int Score::showScoreWin(std::vector<Player> players, int currentRound){
         {
             ss.str("");
             if (i == 0)
-                ss<< round + 1 << "\t\t\t" << players[i].scores[round];
+                ss<<"  " <<round + 1 << ".\t\t\t" << players[i].scores[round];
             else
                 ss<< "\t\t\t" << players[i].scores[round];
 
             text1[round][i].setText(ss.str());
+            total_scores[i] += players[i].scores[round];
         }
+        }
+
+
+        for (int i = 0; i<4; ++i)
+        {
+            ss.str("");
+            if (i == 0)
+                ss<<"Total\t\t" << total_scores[i];
+            else
+                ss<< "\t\t\t" << total_scores[i];
+
+            text1[5][i].setText(ss.str());
         }
         
         headText.renderText(SCORE_WINDOW);
         titleText.renderText(SCORE_WINDOW);
-        for (int i=0 ; i<5; i++)
+        for (int i=0 ; i<=5; i++)
         {
         for (int j = 0; j<5; j++) 
         {

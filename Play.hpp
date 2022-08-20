@@ -23,7 +23,6 @@ class Play{
         sf::Texture cardFrontTexture;
         bool bidWindowShown = true;
         void playGame(sf::RenderWindow & GAME_WINDOW);
-        sf::RectangleShape getCardBackSprite(const sf::Texture & texture, int X_POS, int Y_POS, bool rotateFlag);
         void showCardBacks();
         void loadPlayerCard(std::vector<Card>& card1, sf::Texture& texture);
 
@@ -45,6 +44,7 @@ class Play{
         void setGameCards(int startInd);  
 
         void distCards(bool createPlayer); 
+        sf::RectangleShape getCardBackSprite(const sf::Texture & texture, int X_POS, int Y_POS, bool rotateFlag);
 
 };
 

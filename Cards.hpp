@@ -17,10 +17,8 @@ class Card{
         Card(int s,int r);
         Card(const Card & c1);
         void loadTexture(const sf::Texture & texture);
-        // void loadTexture(sf::Texture & texture,bool scale);
         int getSuit();
         bool isSmlThan(const Card & c1);
-        // Card(Card & c1);
         void operator=(const Card & c1);
         void display();
         int getN();

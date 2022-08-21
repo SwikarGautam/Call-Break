@@ -199,24 +199,7 @@ void Play::playGame(sf::RenderWindow & GAME_WINDOW){
             }
         }
 
-        // Enters here after each 13 rounds are completed
-        else if(gameState == 2){
-            for(int i=0;i<4;i++){
-                players[i].calcScore(round);
-                // std::cout<<"Player "<<i<<" score: "<<players[i].scores[round]<<std::endl;
-            }
-            Score score;
-            score.showScoreWin(players, round);
-            clock.restart();
-            distCards(false);
-            round += 1;
-            gameState = 0;
-            turnInd = rand()%4;
-            winInd = turnInd;
-            if(round>=5){
-                gameState = 3;
-            }
-        }
+        
         GAME_WINDOW.clear();
         
         setPlayerCardsPos(players[playerInd].cards, turnInd==playerInd && gameCards.size()!=4);
@@ -257,6 +240,24 @@ void Play::playGame(sf::RenderWindow & GAME_WINDOW){
         for (int i=0 ; i<4; i++)
         {
             text[i].renderText(GAME_WINDOW);
+        }
+        // Enters here after each 13 rounds are completed
+        if(gameState == 2){
+            for(int i=0;i<4;i++){
+                players[i].calcScore(round);
+                // std::cout<<"Player "<<i<<" score: "<<players[i].scores[round]<<std::endl;
+            }
+            Score score;
+            score.showScoreWin(GAME_WINDOW,players, round);
+            clock.restart();
+            distCards(false);
+            round += 1;
+            gameState = 0;
+            turnInd = rand()%4;
+            winInd = turnInd;
+            if(round>=5){
+                return;
+            }
         }
         GAME_WINDOW.display(); 
     }

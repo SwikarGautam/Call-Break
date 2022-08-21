@@ -3,11 +3,11 @@
 #include <sstream>
 
 //  Score window
-int Score::showScoreWin(std::vector<Player> players, int currentRound){
-    sf::RenderWindow SCORE_WINDOW;
+int Score::showScoreWin(sf::RenderWindow & SCORE_WINDOW, std::vector<Player> players, int currentRound){
+    // sf::RenderWindow SCORE_WINDOW;
 
-    SCORE_WINDOW.create(sf::VideoMode(SCORE_WIDTH, SCORE_HEIGHT), "Score", sf::Style::None);
-    SCORE_WINDOW.setFramerateLimit(30);
+    // SCORE_WINDOW.create(sf::VideoMode(SCORE_WIDTH, SCORE_HEIGHT), "Score", sf::Style::None);
+    // SCORE_WINDOW.setFramerateLimit(30);
 
     		// Load texture for background image and load img
 	sf::Texture texture;
@@ -15,51 +15,27 @@ int Score::showScoreWin(std::vector<Player> players, int currentRound){
 	{
 		std::cout << "Error loading score window background image.";
 	}
+    float x = 250;
+    float y = 150;
 	// if (!texture.loadFromFile("src/Images/scoreBackground.jpg"))
 	// {
 	// 	std::cout << "Error loading score window background image.";
 	// }
 	sf::Sprite scoreBackground(texture);
+    scoreBackground.setPosition(sf::Vector2f(x,y));
 	// scoreBackground.scale(sf::Vector2f(0.4, 0.4));
+    bool f = true;
 
+    Text text[4];
+    std::ostringstream ss;
 
-    while (SCORE_WINDOW.isOpen())
-    {
-		sf::Event event;
-
-        Text text[4];
-    
-        // text[0].loadText("0/0", GAME_WIDTH/2, GAME_HEIGHT - 200);
-        // text[1].loadText("0/0", 41, GAME_HEIGHT/2 - 20);
-        // text[2].loadText("0/0", GAME_WIDTH/2,  100);
-        // text[3].loadText("0/0", GAME_WIDTH - 70, GAME_HEIGHT/2 - 20);
-        std::ostringstream ss;
-
-
-		while (SCORE_WINDOW.pollEvent(event))
-		{
-				if (event.type == sf::Event::Closed)
-				{
-					SCORE_WINDOW.close();
-				}
-                if (event.type == sf::Event::KeyPressed)
-                {
-				    //	Esc  key pressed
-                    if (event.key.code == sf::Keyboard::Enter)
-                    {
-					    //	Escape key pressed closes credits window
-                        SCORE_WINDOW.close();
-                    }
-                }
-    
-        }
-        Text headText;
+    Text headText;
         Text titleText;
         Text text1[6][5];
         float total_scores[4] = {0,0,0,0};
         Text infoText;
-        float initX = 50;
-        float initY = 40;
+        float initX = 50 + x;
+        float initY = 40 + y;
 
         titleText.loadText("", initX - 40, initY - 35, 20, sf::Color::Black, true);
         headText.loadText("", initX, initY, 18, sf::Color::Black, false);
@@ -67,10 +43,10 @@ int Score::showScoreWin(std::vector<Player> players, int currentRound){
 
 
         //  Info text
-        infoText.loadText("", SCORE_WIDTH/2 - 75, SCORE_HEIGHT - 25, 18, sf::Color::Black, true);
+        infoText.loadText("", 175 + x, 308+y, 18, sf::Color::Black, true);
         for (int i=0; i<=currentRound; ++i)
         {
-            initY = float(50 + (i+1) * 40);
+            initY = float(40 + (i+1) * 40) + y;
             for (int j = 0; j<=4; ++j)
             {
             text1[i][j].loadText("", initX + 95 * (j), initY, 18, sf::Color::Black, false);
@@ -79,10 +55,9 @@ int Score::showScoreWin(std::vector<Player> players, int currentRound){
 
         for (int j = 0; j<=4; ++j)
             {
-            text1[5][j].loadText("", initX + 95 * (j), initY+50, 18, sf::Color::Black, false);
+            text1[5][j].loadText("", initX + 95 * (j), initY+40, 18, sf::Color::Black, false);
             }
-        
-        SCORE_WINDOW.clear();
+
         SCORE_WINDOW.draw(scoreBackground);
 
 
@@ -105,7 +80,7 @@ int Score::showScoreWin(std::vector<Player> players, int currentRound){
         {
             ss.str("");
             if (i == 0)
-                ss<<"  " <<round + 1 << ".\t\t\t" << players[i].scores[round];
+                ss<<"  " <<round + 1 << ".\t\t\t" << players[i].scores[round]<<std::setprecision(2);
             else
                 ss<< "\t\t\t" << players[i].scores[round];
 
@@ -119,9 +94,9 @@ int Score::showScoreWin(std::vector<Player> players, int currentRound){
         {
             ss.str("");
             if (i == 0)
-                ss<<"Total\t\t" << total_scores[i];
+                ss<<"Total\t\t" << total_scores[i]<<std::setprecision(2);
             else
-                ss<< "\t\t\t" << total_scores[i];
+                ss<< "\t\t\t" << total_scores[i]<<std::setprecision(2);
 
             text1[5][i].setText(ss.str());
         }
@@ -136,7 +111,36 @@ int Score::showScoreWin(std::vector<Player> players, int currentRound){
         }
         }
         infoText.renderText(SCORE_WINDOW);
+        
         SCORE_WINDOW.display();
+
+    while (SCORE_WINDOW.isOpen())
+    {
+		sf::Event event;
+
+        
+		while (SCORE_WINDOW.pollEvent(event))
+		{
+				if (event.type == sf::Event::Closed)
+				{
+					SCORE_WINDOW.close();
+				}
+                if (event.type == sf::Event::KeyPressed)
+                {
+				    //	Esc  key pressed
+                    if (event.key.code == sf::Keyboard::Enter)
+                    {
+					    //	Escape key pressed closes credits window
+                        // SCORE_WINDOW.close();
+                        return 0 ;
+                    }
+                }
+    
+        }
+        
+        // SCORE_WINDOW.clear();
+        
+        sf::sleep(sf::seconds(1.f/40.f));
     }
     return -1;
 }

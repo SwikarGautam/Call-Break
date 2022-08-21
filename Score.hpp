@@ -11,5 +11,5 @@ class Score
         int SCORE_WIDTH = 500;
         int SCORE_HEIGHT = 333;
     public:
-        int showScoreWin(std::vector<Player> players,int currentRound );
+        int showScoreWin(sf::RenderWindow & SCORE_WINDOW, std::vector<Player> players,int currentRound );
 };
